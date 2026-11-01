@@ -1,0 +1,2445 @@
+<div class="admin-layout">
+
+  <!-- =====================================================
+       SIDEBAR
+       ===================================================== -->
+
+  <aside class="sidebar">
+
+    <!-- BRAND -->
+    <div class="brand">
+
+      <div class="brand-logo">
+        <span>MM</span>
+      </div>
+
+      <div class="brand-text">
+        <h2>MealMitra</h2>
+        <span>Admin Portal</span>
+      </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+    <nav class="sidebar-nav">
+
+      <p class="nav-label">
+        MAIN MENU
+      </p>
+
+
+      <!-- DASHBOARD -->
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'dashboard'"
+        (click)="showSection('dashboard')"
+      >
+
+        <span class="nav-icon">⌂</span>
+
+        <span>
+          Dashboard
+        </span>
+
+      </button>
+
+
+      <!-- USERS -->
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'users'"
+        (click)="showSection('users')"
+      >
+
+        <span class="nav-icon">♙</span>
+
+        <span>
+          Users
+        </span>
+
+      </button>
+
+
+      <!-- DONATIONS -->
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'donations'"
+        (click)="showSection('donations')"
+      >
+
+        <span class="nav-icon">▣</span>
+
+        <span>
+          Donations
+        </span>
+
+      </button>
+
+
+      <!-- ANALYTICS -->
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'analytics'"
+        (click)="showSection('analytics')"
+      >
+
+        <span class="nav-icon">◫</span>
+
+        <span>
+          Analytics
+        </span>
+
+      </button>
+
+
+      <!-- ACCOUNT -->
+      <p class="nav-label second-label">
+        ACCOUNT
+      </p>
+
+
+      <!-- PROFILE -->
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'profile'"
+        (click)="showSection('profile')"
+      >
+
+        <span class="nav-icon">◯</span>
+
+        <span>
+          Profile
+        </span>
+
+      </button>
+
+    </nav>
+
+
+    <!-- SIDEBAR BOTTOM -->
+    <div class="sidebar-bottom">
+
+      <div class="sidebar-help">
+
+        <div class="help-icon">
+          ?
+        </div>
+
+        <div>
+
+          <strong>
+            MealMitra Admin
+          </strong>
+
+          <small>
+            Manage the platform
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="logout-btn"
+        (click)="logout()"
+      >
+
+        <span>
+          ↪
+        </span>
+
+        <span>
+          Logout
+        </span>
+
+      </button>
+
+    </div>
+
+  </aside>
+
+
+
+  <!-- =====================================================
+       MAIN CONTENT
+       ===================================================== -->
+
+  <main class="main-content">
+
+
+    <!-- ===================================================
+         TOP BAR
+         =================================================== -->
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <span class="page-title">
+          ADMIN DASHBOARD
+        </span>
+
+      </div>
+
+
+      <div class="topbar-right">
+
+
+        <!-- REFRESH -->
+        <button
+          class="refresh-btn"
+          (click)="refresh()"
+          title="Refresh dashboard"
+        >
+
+          <span class="refresh-symbol">
+            ↻
+          </span>
+
+          <span>
+            Refresh
+          </span>
+
+        </button>
+
+
+        <!-- ADMIN -->
+        <div class="admin-user">
+
+          <div class="admin-avatar">
+            {{ getInitials(adminName) }}
+          </div>
+
+          <div class="admin-user-info">
+
+            <strong>
+              {{ adminName }}
+            </strong>
+
+            <span>
+              Administrator
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    @if (actionSuccessMessage) {
+      <div class="action-message success-message" role="status">
+        {{ actionSuccessMessage }}
+      </div>
+    }
+
+    @if (actionErrorMessage) {
+      <div class="action-message error-message" role="alert">
+        {{ actionErrorMessage }}
+      </div>
+    }
+
+
+
+    <!-- =====================================================
+         DASHBOARD
+         ===================================================== -->
+
+    @if (activeSection === 'dashboard') {
+
+      <section class="page-section">
+
+
+        <!-- WELCOME -->
+        <div class="welcome-section">
+
+          <div>
+
+            <span class="eyebrow">
+              OVERVIEW
+            </span>
+
+            <h1>
+              Welcome back, {{ adminName }}
+              <span>👋</span>
+            </h1>
+
+            <p>
+              Here's what's happening across the MealMitra platform.
+            </p>
+
+          </div>
+
+
+          <div class="welcome-date">
+
+            <span>
+              PLATFORM OVERVIEW
+            </span>
+
+            <strong>
+              Meal Donation Management
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             DASHBOARD STATISTICS
+             ================================================= -->
+
+        <div class="stats-grid">
+
+
+          <!-- USERS -->
+          <div class="stat-card">
+
+            <div class="stat-icon users-icon">
+              ♙
+            </div>
+
+            <div class="stat-content">
+
+              <span>
+                Total Users
+              </span>
+
+              <strong>
+                {{ totalUsers }}
+              </strong>
+
+              <small>
+                Registered users
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- DONORS -->
+          <div class="stat-card">
+
+            <div class="stat-icon donor-icon">
+              ♡
+            </div>
+
+            <div class="stat-content">
+
+              <span>
+                Total Donors
+              </span>
+
+              <strong>
+                {{ totalDonors }}
+              </strong>
+
+              <small>
+                Food contributors
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- NGOS -->
+          <div class="stat-card">
+
+            <div class="stat-icon ngo-icon">
+              ✦
+            </div>
+
+            <div class="stat-content">
+
+              <span>
+                Total NGOs
+              </span>
+
+              <strong>
+                {{ totalNgos }}
+              </strong>
+
+              <small>
+                Partner organizations
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- DONATIONS -->
+          <div class="stat-card">
+
+            <div class="stat-icon donation-icon">
+              ▣
+            </div>
+
+            <div class="stat-content">
+
+              <span>
+                Total Donations
+              </span>
+
+              <strong>
+                {{ totalDonations }}
+              </strong>
+
+              <small>
+                Donation requests
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             DONATION ACTIVITY
+             ================================================= -->
+
+        <div class="section-heading">
+
+          <div>
+
+            <span class="eyebrow">
+              DONATION ACTIVITY
+            </span>
+
+            <h2>
+              Donation Overview
+            </h2>
+
+          </div>
+
+
+          <button
+            class="text-btn"
+            (click)="showSection('donations')"
+          >
+            View all →
+          </button>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+        <div class="status-grid">
+
+
+          <!-- PENDING -->
+          <div class="status-card pending-card">
+
+            <div class="status-number">
+              {{ pendingDonations }}
+            </div>
+
+            <div>
+
+              <strong>
+                Pending
+              </strong>
+
+              <span>
+                Waiting for an NGO
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACCEPTED -->
+          <div class="status-card accepted-card">
+
+            <div class="status-number">
+              {{ acceptedDonations }}
+            </div>
+
+            <div>
+
+              <strong>
+                Accepted
+              </strong>
+
+              <span>
+                Currently being handled
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- COMPLETED -->
+          <div class="status-card completed-card">
+
+            <div class="status-number">
+              {{ completedDonations }}
+            </div>
+
+            <div>
+
+              <strong>
+                Completed
+              </strong>
+
+              <span>
+                Successfully distributed
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- CANCELLED -->
+          <div class="status-card cancelled-card">
+
+            <div class="status-number">
+              {{ cancelledDonations }}
+            </div>
+
+            <div>
+
+              <strong>
+                Cancelled
+              </strong>
+
+              <span>
+                Cancelled donations
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             IMPACT
+             ================================================= -->
+
+        <div class="impact-card">
+
+          <div class="impact-content">
+
+            <span class="eyebrow">
+              MEALMITRA IMPACT
+            </span>
+
+            <h2>
+              Making food reach people who need it.
+            </h2>
+
+            <p>
+              Track donations, connect NGOs and help reduce food waste
+              through the MealMitra platform.
+            </p>
+
+          </div>
+
+
+          <div class="impact-stats">
+
+            <div>
+
+              <strong>
+                {{ totalPeopleServed }}
+              </strong>
+
+              <span>
+                People Served
+              </span>
+
+            </div>
+
+
+            <div>
+
+              <strong>
+                {{ totalFoodItems }}
+              </strong>
+
+              <span>
+                Food Units
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RECENT DONATIONS
+             ================================================= -->
+
+        <div class="section-heading recent-heading">
+
+          <div>
+
+            <span class="eyebrow">
+              LATEST ACTIVITY
+            </span>
+
+            <h2>
+              Recent Donations
+            </h2>
+
+          </div>
+
+        </div>
+
+
+
+        @if (recentDonations.length > 0) {
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Food
+                  </th>
+
+                  <th>
+                    Donor
+                  </th>
+
+                  <th>
+                    Quantity
+                  </th>
+
+                  <th>
+                    Status
+                  </th>
+
+                  <th>
+                    Date
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for (
+                  donation of recentDonations;
+                  track donation._id
+                ) {
+
+                  <tr>
+
+                    <td>
+
+                      <div class="food-cell">
+
+                        <div class="food-icon">
+                          🍱
+                        </div>
+
+                        <div>
+
+                          <strong>
+                            {{
+                              donation.foodName ||
+                              'Food Donation'
+                            }}
+                          </strong>
+
+                          <span>
+                            {{
+                              donation.foodType ||
+                              'Food'
+                            }}
+                          </span>
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+
+                    <td>
+                      {{
+                        donation.donorId?.donorName ||
+                        'Donor'
+                      }}
+                    </td>
+
+
+                    <td>
+                      {{ donation.quantity || 0 }}
+                      {{ donation.quantityUnit || '' }}
+                    </td>
+
+
+                    <td>
+
+                      <span
+                        class="status-badge"
+                        [ngClass]="
+                          getStatusClass(
+                            donation.status
+                          )
+                        "
+                      >
+                        {{
+                          formatStatus(
+                            donation.status
+                          )
+                        }}
+                      </span>
+
+                    </td>
+
+
+                    <td>
+                      {{
+                        formatDate(
+                          donation.createdAt
+                        )
+                      }}
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        } @else {
+
+          <div class="empty-card">
+
+            <div class="empty-icon">
+              ▣
+            </div>
+
+            <h3>
+              No donation activity yet
+            </h3>
+
+            <p>
+              Donation activity will appear here once donors
+              create donation requests.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+
+
+    <!-- =====================================================
+         USERS
+         ===================================================== -->
+
+    @if (activeSection === 'users') {
+
+      <section class="page-section">
+
+
+        <div class="section-page-header">
+
+          <div>
+
+            <span class="eyebrow">
+              MANAGEMENT
+            </span>
+
+            <h1>
+              User Management
+            </h1>
+
+            <p>
+              Manage donors and NGO accounts registered on MealMitra.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- USER STATS -->
+
+        <div class="management-stats">
+
+
+          <div>
+
+            <span>
+              Total Users
+            </span>
+
+            <strong>
+              {{ totalUsers }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Donors
+            </span>
+
+            <strong>
+              {{ totalDonors }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              NGOs
+            </span>
+
+            <strong>
+              {{ totalNgos }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        @if (allUsers.length > 0) {
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    User
+                  </th>
+
+                  <th>
+                    Email
+                  </th>
+
+                  <th>
+                    Phone
+                  </th>
+
+                  <th>
+                    Role
+                  </th>
+
+                  <th>
+                    Joined
+                  </th>
+
+                  <th>
+                    Actions
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for (
+                  user of allUsers;
+                  track user._id
+                ) {
+
+                  <tr>
+
+                    <td>
+
+                      <div class="user-cell">
+
+                        <div class="small-avatar">
+
+                          {{
+                            getInitials(
+                              user.organizationName ||
+                              user.donorName ||
+                              user.name ||
+                              'User'
+                            )
+                          }}
+
+                        </div>
+
+
+                        <strong>
+
+                          {{
+                            user.organizationName ||
+                            user.donorName ||
+                            user.name ||
+                            'User'
+                          }}
+
+                        </strong>
+
+                      </div>
+
+                    </td>
+
+
+                    <td>
+
+                      {{
+                        user.organizationEmail ||
+                        user.donorEmail ||
+                        user.email ||
+                        '-'
+                      }}
+
+                    </td>
+
+
+                    <td>
+
+                      {{
+                        user.organizationPhone ||
+                        user.donorPhone ||
+                        user.phone ||
+                        '-'
+                      }}
+
+                    </td>
+
+
+                    <td>
+
+                      <span class="role-badge">
+                        {{ user.role || 'User' }}
+                      </span>
+
+                    </td>
+
+
+                    <td>
+
+                      {{
+                        formatDate(
+                          user.createdAt
+                        )
+                      }}
+
+                    </td>
+
+                    <td>
+                      <button
+                        type="button"
+                        class="delete-button"
+                        [disabled]="deletingUserId === user._id"
+                        (click)="deleteUser(user)"
+                      >
+                        {{
+                          deletingUserId === user._id
+                            ? 'Deleting...'
+                            : 'Delete'
+                        }}
+                      </button>
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        } @else {
+
+          <div class="empty-card">
+
+            <div class="empty-icon">
+              ♙
+            </div>
+
+            <h3>
+              No users available
+            </h3>
+
+            <p>
+              User information will appear here once the admin API
+              is connected.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+
+
+    <!-- =====================================================
+         DONATIONS
+         ===================================================== -->
+
+    @if (activeSection === 'donations') {
+
+      <section class="page-section">
+
+
+        <div class="section-page-header">
+
+          <div>
+
+            <span class="eyebrow">
+              MANAGEMENT
+            </span>
+
+            <h1>
+              Donation Management
+            </h1>
+
+            <p>
+              Monitor and manage food donations across the platform.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- DONATION STATS -->
+
+        <div class="management-stats">
+
+
+          <div>
+
+            <span>
+              Total Donations
+            </span>
+
+            <strong>
+              {{ totalDonations }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Pending
+            </span>
+
+            <strong>
+              {{ pendingDonations }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Accepted
+            </span>
+
+            <strong>
+              {{ acceptedDonations }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Completed
+            </span>
+
+            <strong>
+              {{ completedDonations }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        @if (allDonations.length > 0) {
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Food
+                  </th>
+
+                  <th>
+                    Donor
+                  </th>
+
+                  <th>
+                    Quantity
+                  </th>
+
+                  <th>
+                    Servings
+                  </th>
+
+                  <th>
+                    Status
+                  </th>
+
+                  <th>
+                    Created
+                  </th>
+
+                  <th>
+                    Actions
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for (
+                  donation of allDonations;
+                  track donation._id
+                ) {
+
+                  <tr>
+
+                    <td>
+
+                      <div class="food-cell">
+
+                        <div class="food-icon">
+                          🍱
+                        </div>
+
+                        <div>
+
+                          <strong>
+                            {{
+                              donation.foodName ||
+                              'Food'
+                            }}
+                          </strong>
+
+                          <span>
+                            {{
+                              donation.foodType ||
+                              '-'
+                            }}
+                          </span>
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+
+                    <td>
+
+                      {{
+                        donation.donorId?.donorName ||
+                        'Donor'
+                      }}
+
+                    </td>
+
+
+                    <td>
+
+                      {{ donation.quantity || 0 }}
+                      {{ donation.quantityUnit || '' }}
+
+                    </td>
+
+
+                    <td>
+
+                      {{ donation.servings || 0 }}
+
+                    </td>
+
+
+                    <td>
+
+                      <span
+                        class="status-badge"
+                        [ngClass]="
+                          getStatusClass(
+                            donation.status
+                          )
+                        "
+                      >
+
+                        {{
+                          formatStatus(
+                            donation.status
+                          )
+                        }}
+
+                      </span>
+
+                    </td>
+
+
+                    <td>
+
+                      {{
+                        formatDate(
+                          donation.createdAt
+                        )
+                      }}
+
+                    </td>
+
+                    <td>
+                      <button
+                        type="button"
+                        class="delete-button"
+                        [disabled]="deletingDonationId === donation._id"
+                        (click)="deleteDonation(donation)"
+                      >
+                        {{
+                          deletingDonationId === donation._id
+                            ? 'Deleting...'
+                            : 'Delete'
+                        }}
+                      </button>
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        } @else {
+
+          <div class="empty-card">
+
+            <div class="empty-icon">
+              ▣
+            </div>
+
+            <h3>
+              No donations available
+            </h3>
+
+            <p>
+              Donation records will appear here once the admin API
+              is connected.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+
+
+    <!-- =====================================================
+         ANALYTICS
+         ===================================================== -->
+
+    @if (activeSection === 'analytics') {
+
+      <section class="page-section analytics-page">
+
+
+        <!-- =================================================
+             ANALYTICS HEADER
+             ================================================= -->
+
+        <div class="analytics-page-header">
+
+          <div>
+
+            <span class="eyebrow">
+              INSIGHTS
+            </span>
+
+            <h1>
+              Analytics
+            </h1>
+
+            <p>
+              Monitor MealMitra's users, donations and platform impact.
+            </p>
+
+          </div>
+
+
+          <div class="analytics-date-card">
+
+            <span>
+              PLATFORM OVERVIEW
+            </span>
+
+            <strong>
+              Meal Donation Management
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             KPI CARDS
+             ================================================= -->
+
+        <div class="analytics-kpi-grid">
+
+
+          <!-- TOTAL USERS -->
+
+          <div class="analytics-kpi-card">
+
+            <div class="kpi-top">
+
+              <div class="kpi-icon users-kpi">
+                ♙
+              </div>
+
+              <span class="kpi-label">
+                TOTAL USERS
+              </span>
+
+            </div>
+
+            <strong class="kpi-number">
+              {{ totalUsers }}
+            </strong>
+
+            <span class="kpi-description">
+              Registered platform users
+            </span>
+
+          </div>
+
+
+
+          <!-- DONORS -->
+
+          <div class="analytics-kpi-card">
+
+            <div class="kpi-top">
+
+              <div class="kpi-icon donors-kpi">
+                ♡
+              </div>
+
+              <span class="kpi-label">
+                DONORS
+              </span>
+
+            </div>
+
+            <strong class="kpi-number">
+              {{ totalDonors }}
+            </strong>
+
+            <span class="kpi-description">
+              Food contributors
+            </span>
+
+          </div>
+
+
+
+          <!-- NGOS -->
+
+          <div class="analytics-kpi-card">
+
+            <div class="kpi-top">
+
+              <div class="kpi-icon ngos-kpi">
+                ✦
+              </div>
+
+              <span class="kpi-label">
+                NGOS
+              </span>
+
+            </div>
+
+            <strong class="kpi-number">
+              {{ totalNgos }}
+            </strong>
+
+            <span class="kpi-description">
+              Partner organizations
+            </span>
+
+          </div>
+
+
+
+          <!-- DONATIONS -->
+
+          <div class="analytics-kpi-card">
+
+            <div class="kpi-top">
+
+              <div class="kpi-icon donations-kpi">
+                ▣
+              </div>
+
+              <span class="kpi-label">
+                DONATIONS
+              </span>
+
+            </div>
+
+            <strong class="kpi-number">
+              {{ totalDonations }}
+            </strong>
+
+            <span class="kpi-description">
+              Total donation requests
+            </span>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ANALYTICS PANELS
+             ================================================= -->
+
+        <div class="analytics-main-grid">
+
+
+          <!-- =================================================
+               DONATION STATUS PANEL
+               ================================================= -->
+
+          <div class="analytics-panel">
+
+            <div class="panel-header">
+
+              <div>
+
+                <span class="panel-eyebrow">
+                  DONATION BREAKDOWN
+                </span>
+
+                <h2>
+                  Donation Status
+                </h2>
+
+                <p>
+                  Current distribution of donation requests.
+                </p>
+
+              </div>
+
+
+              <div class="panel-icon">
+                ▣
+              </div>
+
+            </div>
+
+
+
+            <!-- TOTAL DONATIONS -->
+
+            <div class="status-total">
+
+              <div>
+
+                <span>
+                  Total donations
+                </span>
+
+                <strong>
+                  {{ totalDonations }}
+                </strong>
+
+              </div>
+
+
+              <div class="completion-rate">
+
+                <strong>
+
+                  {{
+                    totalDonations > 0
+                      ? (
+                          (completedDonations /
+                          totalDonations) *
+                          100
+                        ).toFixed(0)
+                      : 0
+                  }}%
+
+                </strong>
+
+                <span>
+                  Completion rate
+                </span>
+
+              </div>
+
+            </div>
+
+
+
+            <!-- PENDING -->
+
+            <div class="analytics-status-row">
+
+              <div class="status-row-top">
+
+                <div class="status-name">
+
+                  <span
+                    class="status-dot pending-dot"
+                  ></span>
+
+                  <span>
+                    Pending
+                  </span>
+
+                </div>
+
+                <strong>
+                  {{ pendingDonations }}
+                </strong>
+
+              </div>
+
+
+              <div class="status-bar-track">
+
+                <div
+                  class="status-bar pending-bar"
+                  [style.width.%]="
+                    totalDonations > 0
+                      ? (
+                          pendingDonations /
+                          totalDonations
+                        ) * 100
+                      : 0
+                  "
+                ></div>
+
+              </div>
+
+            </div>
+
+
+
+            <!-- ACCEPTED -->
+
+            <div class="analytics-status-row">
+
+              <div class="status-row-top">
+
+                <div class="status-name">
+
+                  <span
+                    class="status-dot accepted-dot"
+                  ></span>
+
+                  <span>
+                    Accepted
+                  </span>
+
+                </div>
+
+                <strong>
+                  {{ acceptedDonations }}
+                </strong>
+
+              </div>
+
+
+              <div class="status-bar-track">
+
+                <div
+                  class="status-bar accepted-bar"
+                  [style.width.%]="
+                    totalDonations > 0
+                      ? (
+                          acceptedDonations /
+                          totalDonations
+                        ) * 100
+                      : 0
+                  "
+                ></div>
+
+              </div>
+
+            </div>
+
+
+
+            <!-- COMPLETED -->
+
+            <div class="analytics-status-row">
+
+              <div class="status-row-top">
+
+                <div class="status-name">
+
+                  <span
+                    class="status-dot completed-dot"
+                  ></span>
+
+                  <span>
+                    Completed
+                  </span>
+
+                </div>
+
+                <strong>
+                  {{ completedDonations }}
+                </strong>
+
+              </div>
+
+
+              <div class="status-bar-track">
+
+                <div
+                  class="status-bar completed-bar"
+                  [style.width.%]="
+                    totalDonations > 0
+                      ? (
+                          completedDonations /
+                          totalDonations
+                        ) * 100
+                      : 0
+                  "
+                ></div>
+
+              </div>
+
+            </div>
+
+
+
+            <!-- CANCELLED -->
+
+            <div class="analytics-status-row">
+
+              <div class="status-row-top">
+
+                <div class="status-name">
+
+                  <span
+                    class="status-dot cancelled-dot"
+                  ></span>
+
+                  <span>
+                    Cancelled
+                  </span>
+
+                </div>
+
+                <strong>
+                  {{ cancelledDonations }}
+                </strong>
+
+              </div>
+
+
+              <div class="status-bar-track">
+
+                <div
+                  class="status-bar cancelled-bar"
+                  [style.width.%]="
+                    totalDonations > 0
+                      ? (
+                          cancelledDonations /
+                          totalDonations
+                        ) * 100
+                      : 0
+                  "
+                ></div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- =================================================
+               USER DISTRIBUTION
+               ================================================= -->
+
+          <div class="analytics-panel">
+
+            <div class="panel-header">
+
+              <div>
+
+                <span class="panel-eyebrow">
+                  USER DISTRIBUTION
+                </span>
+
+                <h2>
+                  Platform Users
+                </h2>
+
+                <p>
+                  Breakdown of registered platform accounts.
+                </p>
+
+              </div>
+
+
+              <div class="panel-icon">
+                ♙
+              </div>
+
+            </div>
+
+
+
+            <div class="user-distribution">
+
+
+              <!-- DONORS -->
+
+              <div class="user-distribution-row">
+
+                <div class="distribution-label">
+
+                  <div class="distribution-icon donor-distribution">
+                    ♡
+                  </div>
+
+                  <div>
+
+                    <strong>
+                      Donors
+                    </strong>
+
+                    <span>
+                      Food contributors
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div class="distribution-value">
+
+                  <strong>
+                    {{ totalDonors }}
+                  </strong>
+
+                  <span>
+
+                    {{
+                      totalUsers > 0
+                        ? (
+                            (totalDonors /
+                            totalUsers) *
+                            100
+                          ).toFixed(0)
+                        : 0
+                    }}%
+
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div class="distribution-track">
+
+                <div
+                  class="distribution-fill donor-fill"
+                  [style.width.%]="
+                    totalUsers > 0
+                      ? (
+                          totalDonors /
+                          totalUsers
+                        ) * 100
+                      : 0
+                  "
+                ></div>
+
+              </div>
+
+
+
+              <!-- NGOS -->
+
+              <div class="user-distribution-row second-distribution">
+
+                <div class="distribution-label">
+
+                  <div class="distribution-icon ngo-distribution">
+                    ✦
+                  </div>
+
+                  <div>
+
+                    <strong>
+                      NGOs
+                    </strong>
+
+                    <span>
+                      Partner organizations
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div class="distribution-value">
+
+                  <strong>
+                    {{ totalNgos }}
+                  </strong>
+
+                  <span>
+
+                    {{
+                      totalUsers > 0
+                        ? (
+                            (totalNgos /
+                            totalUsers) *
+                            100
+                          ).toFixed(0)
+                        : 0
+                    }}%
+
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div class="distribution-track">
+
+                <div
+                  class="distribution-fill ngo-fill"
+                  [style.width.%]="
+                    totalUsers > 0
+                      ? (
+                          totalNgos /
+                          totalUsers
+                        ) * 100
+                      : 0
+                  "
+                ></div>
+
+              </div>
+
+
+
+              <!-- TOTAL -->
+
+              <div class="user-total-box">
+
+                <div>
+
+                  <span>
+                    Total registered accounts
+                  </span>
+
+                  <strong>
+                    {{ totalUsers }}
+                  </strong>
+
+                </div>
+
+
+                <div class="user-total-icon">
+                  ✓
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             IMPACT
+             ================================================= -->
+
+        <div class="impact-analytics-panel">
+
+          <div class="impact-analytics-content">
+
+            <span class="panel-eyebrow impact-eyebrow">
+              MEALMITRA IMPACT
+            </span>
+
+            <h2>
+              Food reaching people who need it.
+            </h2>
+
+            <p>
+              Your platform connects food donors with NGOs and helps
+              reduce food waste through coordinated donations.
+            </p>
+
+          </div>
+
+
+          <div class="impact-metrics">
+
+
+            <!-- PEOPLE -->
+
+            <div class="impact-metric">
+
+              <div class="impact-metric-icon">
+                ♡
+              </div>
+
+              <div>
+
+                <strong>
+                  {{ totalPeopleServed }}
+                </strong>
+
+                <span>
+                  People Served
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- FOOD -->
+
+            <div class="impact-metric">
+
+              <div class="impact-metric-icon">
+                🍱
+              </div>
+
+              <div>
+
+                <strong>
+                  {{ totalFoodItems }}
+                </strong>
+
+                <span>
+                  Food Units
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- COMPLETED -->
+
+            <div class="impact-metric">
+
+              <div class="impact-metric-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <strong>
+                  {{ completedDonations }}
+                </strong>
+
+                <span>
+                  Completed Donations
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUICK SUMMARY
+             ================================================= -->
+
+        <div class="analytics-summary-grid">
+
+
+          <!-- SUCCESSFUL DONATIONS -->
+
+          <div class="summary-card">
+
+            <div class="summary-icon">
+              ↗
+            </div>
+
+            <div>
+
+              <span>
+                Successful Donations
+              </span>
+
+              <strong>
+                {{ completedDonations }}
+              </strong>
+
+              <small>
+                Successfully distributed
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- NGO NETWORK -->
+
+          <div class="summary-card">
+
+            <div class="summary-icon">
+              ♧
+            </div>
+
+            <div>
+
+              <span>
+                NGO Network
+              </span>
+
+              <strong>
+                {{ totalNgos }}
+              </strong>
+
+              <small>
+                Organizations connected
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTRIBUTORS -->
+
+          <div class="summary-card">
+
+            <div class="summary-icon">
+              ♡
+            </div>
+
+            <div>
+
+              <span>
+                Community Contributors
+              </span>
+
+              <strong>
+                {{ totalDonors }}
+              </strong>
+
+              <small>
+                Registered food donors
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    }
+
+
+
+    <!-- ==========================================
+     PROFILE
+     ========================================== -->
+
+@if (activeSection === 'profile') {
+
+  <section class="page-section profile-page">
+
+    <!-- PAGE HEADER -->
+
+    <div class="section-page-header profile-page-header">
+
+      <div>
+        <span class="eyebrow">ACCOUNT</span>
+
+        <h1>Admin Profile</h1>
+
+        <p>
+          Manage and view your MealMitra administrator account.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- PROFILE LAYOUT -->
+
+    <div class="admin-profile-layout">
+
+
+      <!-- ==========================================
+           PROFILE IDENTITY CARD
+           ========================================== -->
+
+      <div class="admin-profile-main">
+
+        <div class="profile-cover">
+
+          <div class="profile-cover-pattern"></div>
+
+        </div>
+
+
+        <div class="profile-identity">
+
+          <div class="profile-avatar-large">
+            {{ getInitials(adminName) }}
+          </div>
+
+
+          <div class="profile-identity-info">
+
+            <span class="profile-role-label">
+              ADMINISTRATOR
+            </span>
+
+            <h2>
+              {{ adminName || 'MealMitra Admin' }}
+            </h2>
+
+            <p>
+              MealMitra Platform Administrator
+            </p>
+
+          </div>
+
+
+          <div class="profile-status">
+
+            <span class="status-dot"></span>
+
+            <span>Active Account</span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ACCOUNT INFORMATION -->
+
+        <div class="profile-information">
+
+          <div class="profile-section-title">
+
+            <div>
+              <span class="eyebrow">ACCOUNT DETAILS</span>
+
+              <h3>Administrator Information</h3>
+            </div>
+
+          </div>
+
+
+          <div class="profile-info-grid">
+
+
+            <!-- NAME -->
+
+            <div class="profile-info-item">
+
+              <div class="profile-info-icon">
+                <span>◉</span>
+              </div>
+
+              <div class="profile-info-content">
+
+                <span>Full Name</span>
+
+                <strong>
+                  {{ adminName || 'MealMitra Admin' }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="profile-info-item">
+
+              <div class="profile-info-icon">
+                <span>✉</span>
+              </div>
+
+              <div class="profile-info-content">
+
+                <span>Email Address</span>
+
+                <strong>
+                  {{ adminEmail || 'admin@mealmitra.com' }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="profile-info-item">
+
+              <div class="profile-info-icon">
+                <span>☎</span>
+              </div>
+
+              <div class="profile-info-content">
+
+                <span>Phone Number</span>
+
+                <strong>
+                  {{ adminPhone || 'Not provided' }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- ROLE -->
+
+            <div class="profile-info-item">
+
+              <div class="profile-info-icon">
+                <span>♙</span>
+              </div>
+
+              <div class="profile-info-content">
+
+                <span>Account Role</span>
+
+                <strong>
+                  Administrator
+                </strong>
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ==========================================
+           PROFILE SIDE PANEL
+           ========================================== -->
+
+      <aside class="profile-side-panel">
+
+
+        <!-- ACCOUNT STATUS -->
+
+        <div class="profile-side-card">
+
+          <div class="side-card-heading">
+
+            <div class="side-card-icon">
+              ✓
+            </div>
+
+            <div>
+              <strong>Account Status</strong>
+              <span>Current account information</span>
+            </div>
+
+          </div>
+
+
+          <div class="account-status-box">
+
+            <div class="account-status-indicator">
+
+              <span class="status-dot"></span>
+
+              <strong>Active</strong>
+
+            </div>
+
+            <p>
+              Your administrator account is active and
+              ready to manage the MealMitra platform.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ADMIN ROLE -->
+
+        <div class="profile-side-card">
+
+          <div class="side-card-heading">
+
+            <div class="side-card-icon role-side-icon">
+              ★
+            </div>
+
+            <div>
+              <strong>Administrator</strong>
+              <span>Platform access</span>
+            </div>
+
+          </div>
+
+
+          <div class="role-description">
+
+            <p>
+              Full administrative access to MealMitra
+              platform management and monitoring.
+            </p>
+
+          </div>
+
+          <div class="permission-list">
+
+            <div>
+              <span class="permission-check">✓</span>
+              <span>User management</span>
+            </div>
+
+            <div>
+              <span class="permission-check">✓</span>
+              <span>Donation monitoring</span>
+            </div>
+
+            <div>
+              <span class="permission-check">✓</span>
+              <span>Platform analytics</span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- PLATFORM -->
+
+        <div class="profile-side-card platform-card">
+
+          <span class="eyebrow">
+            MEALMITRA
+          </span>
+
+          <h3>
+            Food. People. Impact.
+          </h3>
+
+          <p>
+            Helping surplus food reach people who need it.
+          </p>
+
+        </div>
+
+
+      </aside>
+
+    </div>
+
+  </section>
+
+}

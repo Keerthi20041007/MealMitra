@@ -1,0 +1,1154 @@
+<div class="register-page">
+
+  <!-- ==========================================
+       LEFT BRAND PANEL
+  =========================================== -->
+
+  <section class="brand-panel">
+
+    <div class="brand-content">
+
+      <!-- BRAND -->
+      <a
+        routerLink="/"
+        class="brand-logo"
+      >
+
+        <div class="logo-box">
+          🍃
+        </div>
+
+        <div>
+
+          <div class="brand-name">
+            MealMitra
+          </div>
+
+          <div class="brand-tagline">
+            Share • Care • Reduce Waste
+          </div>
+
+        </div>
+
+      </a>
+
+
+      <!-- MAIN MESSAGE -->
+      <div class="brand-message">
+
+        <div class="quote-icon">
+          "
+        </div>
+
+        <h1>
+          Together,
+          <span>we can make food matter.</span>
+        </h1>
+
+        <p>
+          Create your MealMitra account and become
+          part of a community working to reduce food
+          waste and support people in need.
+        </p>
+
+      </div>
+
+
+      <!-- BENEFITS -->
+      <div class="benefits">
+
+        <div class="benefit">
+
+          <div class="benefit-icon">
+            🍱
+          </div>
+
+          <div>
+
+            <h3>
+              Share Surplus Food
+            </h3>
+
+            <p>
+              Turn extra food into meaningful meals.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="benefit">
+
+          <div class="benefit-icon">
+            🤝
+          </div>
+
+          <div>
+
+            <h3>
+              Connect with Communities
+            </h3>
+
+            <p>
+              Work together with NGOs near you.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="benefit">
+
+          <div class="benefit-icon">
+            🌱
+          </div>
+
+          <div>
+
+            <h3>
+              Create an Impact
+            </h3>
+
+            <p>
+              Help reduce food waste every day.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       RIGHT REGISTRATION PANEL
+  =========================================== -->
+
+  <section class="register-panel">
+
+    <div class="register-container">
+
+
+      <!-- MOBILE LOGO -->
+      <div class="mobile-logo">
+
+        <div class="mobile-logo-icon">
+          🍃
+        </div>
+
+        <span>
+          MealMitra
+        </span>
+
+      </div>
+
+
+      <!-- HEADER -->
+      <div class="register-header">
+
+        <span class="welcome-label">
+          JOIN MEALMITRA
+        </span>
+
+        <h2>
+          Create your account
+        </h2>
+
+        <p>
+          Start sharing food and creating a positive impact.
+        </p>
+
+      </div>
+
+
+      <!-- ERROR -->
+      @if (errorMessage) {
+
+        <div class="message error-message">
+
+          <span class="message-icon">
+            !
+          </span>
+
+          <span>
+            {{ errorMessage }}
+          </span>
+
+        </div>
+
+      }
+
+
+      <!-- SUCCESS -->
+      @if (successMessage) {
+
+        <div class="message success-message">
+
+          <span class="message-icon">
+            ✓
+          </span>
+
+          <span>
+            {{ successMessage }}
+          </span>
+
+        </div>
+
+      }
+
+
+      <!-- ========================================
+           ACCOUNT TYPE
+      ========================================= -->
+
+      <div class="role-section">
+
+        <label class="section-label">
+          I want to register as
+        </label>
+
+        <div class="role-options">
+
+
+          <!-- DONOR -->
+          <button
+            type="button"
+            class="role-card"
+            [class.selected]="user.role === 'donor'"
+            (click)="user.role = 'donor'; roleChanged()"
+            [disabled]="loading"
+          >
+
+            <div class="role-icon">
+              🍱
+            </div>
+
+            <div class="role-content">
+
+              <strong>
+                Food Donor
+              </strong>
+
+              <span>
+                I have surplus food to share
+              </span>
+
+            </div>
+
+            <div class="radio-circle">
+
+              @if (user.role === 'donor') {
+                <span></span>
+              }
+
+            </div>
+
+          </button>
+
+
+          <!-- NGO -->
+          <button
+            type="button"
+            class="role-card"
+            [class.selected]="user.role === 'ngo'"
+            (click)="user.role = 'ngo'; roleChanged()"
+            [disabled]="loading"
+          >
+
+            <div class="role-icon">
+              🤝
+            </div>
+
+            <div class="role-content">
+
+              <strong>
+                NGO
+              </strong>
+
+              <span>
+                I help distribute food to people
+              </span>
+
+            </div>
+
+            <div class="radio-circle">
+
+              @if (user.role === 'ngo') {
+                <span></span>
+              }
+
+            </div>
+
+          </button>
+
+        </div>
+
+        @if (roleError) {
+          <small class="field-error" role="alert">
+            {{ roleError }}
+          </small>
+        }
+
+      </div>
+
+
+      <!-- ========================================
+           DONOR FORM
+      ========================================= -->
+
+      @if (user.role === 'donor') {
+
+        <form
+          class="registration-form"
+          (ngSubmit)="register()"
+          novalidate
+        >
+
+          <div class="form-heading">
+
+            <div class="heading-icon">
+              🍱
+            </div>
+
+            <div>
+
+              <h3>
+                Donor Details
+              </h3>
+
+              <p>
+                Tell us a little about yourself.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- NAME + PHONE -->
+          <div class="form-row">
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('donorName')">
+
+              <label for="donorName">
+                Full Name
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  👤
+                </span>
+
+                <input
+                  id="donorName"
+                  type="text"
+                  [(ngModel)]="user.donorName"
+                  name="donorName"
+                  placeholder="Enter your name"
+                  autocomplete="name"
+                  [disabled]="loading"
+                  [class.invalid-input]="shouldShowFieldError('donorName')"
+                  [attr.aria-invalid]="shouldShowFieldError('donorName')"
+                  aria-describedby="donorName-error"
+                  (ngModelChange)="onFieldInput('donorName')"
+                  (blur)="onFieldBlur('donorName')"
+                  required
+                />
+
+              </div>
+
+              @if (shouldShowFieldError('donorName')) {
+                <small id="donorName-error" class="field-error" role="alert">
+                  {{ fieldErrors.donorName }}
+                </small>
+              }
+
+            </div>
+
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('donorPhone')">
+
+              <label for="donorPhone">
+                Phone Number
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  📱
+                </span>
+
+                <input
+                  id="donorPhone"
+                  type="tel"
+                  [(ngModel)]="user.donorPhone"
+                  name="donorPhone"
+                  placeholder="Enter phone number"
+                  autocomplete="tel"
+                  [disabled]="loading"
+                  [class.invalid-input]="shouldShowFieldError('donorPhone')"
+                  [attr.aria-invalid]="shouldShowFieldError('donorPhone')"
+                  aria-describedby="donorPhone-error"
+                  (ngModelChange)="onFieldInput('donorPhone')"
+                  (blur)="onFieldBlur('donorPhone')"
+                  required
+                />
+
+              </div>
+
+              @if (shouldShowFieldError('donorPhone')) {
+                <small id="donorPhone-error" class="field-error" role="alert">
+                  {{ fieldErrors.donorPhone }}
+                </small>
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- EMAIL -->
+          <div class="form-group" [class.has-error]="shouldShowFieldError('donorEmail')">
+
+            <label for="donorEmail">
+              Email Address
+            </label>
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">
+                ✉
+              </span>
+
+              <input
+                id="donorEmail"
+                type="email"
+                [(ngModel)]="user.donorEmail"
+                name="donorEmail"
+                placeholder="Enter your email"
+                autocomplete="email"
+                [disabled]="loading"
+                [class.invalid-input]="shouldShowFieldError('donorEmail')"
+                [attr.aria-invalid]="shouldShowFieldError('donorEmail')"
+                aria-describedby="donorEmail-error"
+                (ngModelChange)="onFieldInput('donorEmail')"
+                (blur)="onFieldBlur('donorEmail')"
+                required
+              />
+
+            </div>
+
+            @if (shouldShowFieldError('donorEmail')) {
+              <small id="donorEmail-error" class="field-error" role="alert">
+                {{ fieldErrors.donorEmail }}
+              </small>
+            }
+
+          </div>
+
+
+          <!-- PASSWORD ROW -->
+          <div class="form-row">
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('password')">
+
+              <label for="donorPassword">
+                Password
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  🔒
+                </span>
+
+                <input
+                  id="donorPassword"
+                  [type]="showPassword ? 'text' : 'password'"
+                  [(ngModel)]="user.password"
+                  name="donorPassword"
+                  placeholder="Create password"
+                  autocomplete="new-password"
+                  [disabled]="loading"
+                  maxlength="128"
+                  [class.invalid-input]="shouldShowFieldError('password')"
+                  [attr.aria-invalid]="shouldShowFieldError('password')"
+                  aria-describedby="donorPassword-error"
+                  (ngModelChange)="onFieldInput('password')"
+                  (blur)="onFieldBlur('password')"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="togglePassword()"
+                  [disabled]="loading"
+                >
+                  {{ showPassword ? '◉' : '◌' }}
+                </button>
+
+              </div>
+
+              @if (shouldShowFieldError('password')) {
+                <small id="donorPassword-error" class="field-error" role="alert">
+                  {{ fieldErrors.password }}
+                </small>
+              }
+
+            </div>
+
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('confirmPassword')">
+
+              <label for="donorConfirmPassword">
+                Confirm Password
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  🔒
+                </span>
+
+                <input
+                  id="donorConfirmPassword"
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  [(ngModel)]="user.confirmPassword"
+                  name="donorConfirmPassword"
+                  placeholder="Confirm password"
+                  autocomplete="new-password"
+                  [disabled]="loading"
+                  maxlength="128"
+                  [class.invalid-input]="shouldShowFieldError('confirmPassword')"
+                  [attr.aria-invalid]="shouldShowFieldError('confirmPassword')"
+                  aria-describedby="donorConfirmPassword-error"
+                  (ngModelChange)="onFieldInput('confirmPassword')"
+                  (blur)="onFieldBlur('confirmPassword')"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="toggleConfirmPassword()"
+                  [disabled]="loading"
+                >
+                  {{ showConfirmPassword ? '◉' : '◌' }}
+                </button>
+
+              </div>
+
+              @if (shouldShowFieldError('confirmPassword')) {
+                <small id="donorConfirmPassword-error" class="field-error" role="alert">
+                  {{ fieldErrors.confirmPassword }}
+                </small>
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- DONOR BUTTON -->
+          <button
+            type="submit"
+            class="register-button"
+            [disabled]="loading"
+          >
+
+            @if (!loading) {
+              <span>
+                Create Donor Account
+              </span>
+
+              <span class="button-arrow">
+                →
+              </span>
+            }
+
+            @if (loading) {
+
+              <span class="spinner"></span>
+
+              <span>
+                Creating account...
+              </span>
+
+            }
+
+          </button>
+
+        </form>
+
+      }
+
+
+      <!-- ========================================
+           NGO FORM
+      ========================================= -->
+
+      @if (user.role === 'ngo') {
+
+        <form
+          class="registration-form"
+          (ngSubmit)="register()"
+          novalidate
+        >
+
+          <!-- ORGANIZATION DETAILS -->
+          <div class="form-heading">
+
+            <div class="heading-icon">
+              🤝
+            </div>
+
+            <div>
+
+              <h3>
+                Organization Details
+              </h3>
+
+              <p>
+                Tell us about your organization.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- ORGANIZATION NAME -->
+          <div class="form-group" [class.has-error]="shouldShowFieldError('organizationName')">
+
+            <label for="organizationName">
+              Organization Name
+            </label>
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">
+                🏢
+              </span>
+
+              <input
+                id="organizationName"
+                type="text"
+                [(ngModel)]="user.organizationName"
+                name="organizationName"
+                placeholder="Enter organization name"
+                [disabled]="loading"
+                [class.invalid-input]="shouldShowFieldError('organizationName')"
+                [attr.aria-invalid]="shouldShowFieldError('organizationName')"
+                aria-describedby="organizationName-error"
+                (ngModelChange)="onFieldInput('organizationName')"
+                (blur)="onFieldBlur('organizationName')"
+                required
+              />
+
+            </div>
+
+            @if (shouldShowFieldError('organizationName')) {
+              <small id="organizationName-error" class="field-error" role="alert">
+                {{ fieldErrors.organizationName }}
+              </small>
+            }
+
+          </div>
+
+
+          <!-- PHONE + EMAIL -->
+          <div class="form-row">
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('organizationPhone')">
+
+              <label for="organizationPhone">
+                Phone Number
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  📱
+                </span>
+
+                <input
+                  id="organizationPhone"
+                  type="tel"
+                  [(ngModel)]="user.organizationPhone"
+                  name="organizationPhone"
+                  placeholder="Organization phone"
+                  [disabled]="loading"
+                  [class.invalid-input]="shouldShowFieldError('organizationPhone')"
+                  [attr.aria-invalid]="shouldShowFieldError('organizationPhone')"
+                  aria-describedby="organizationPhone-error"
+                  (ngModelChange)="onFieldInput('organizationPhone')"
+                  (blur)="onFieldBlur('organizationPhone')"
+                  required
+                />
+
+              </div>
+
+              @if (shouldShowFieldError('organizationPhone')) {
+                <small id="organizationPhone-error" class="field-error" role="alert">
+                  {{ fieldErrors.organizationPhone }}
+                </small>
+              }
+
+            </div>
+
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('organizationEmail')">
+
+              <label for="organizationEmail">
+                Email Address
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  ✉
+                </span>
+
+                <input
+                  id="organizationEmail"
+                  type="email"
+                  [(ngModel)]="user.organizationEmail"
+                  name="organizationEmail"
+                  placeholder="Organization email"
+                  [disabled]="loading"
+                  [class.invalid-input]="shouldShowFieldError('organizationEmail')"
+                  [attr.aria-invalid]="shouldShowFieldError('organizationEmail')"
+                  aria-describedby="organizationEmail-error"
+                  (ngModelChange)="onFieldInput('organizationEmail')"
+                  (blur)="onFieldBlur('organizationEmail')"
+                  required
+                />
+
+              </div>
+
+              @if (shouldShowFieldError('organizationEmail')) {
+                <small id="organizationEmail-error" class="field-error" role="alert">
+                  {{ fieldErrors.organizationEmail }}
+                </small>
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- ABOUT -->
+          <div class="form-group" [class.has-error]="shouldShowFieldError('organizationAbout')">
+
+            <label for="organizationAbout">
+              About Organization
+            </label>
+
+            <textarea
+              id="organizationAbout"
+              [(ngModel)]="user.organizationAbout"
+              name="organizationAbout"
+              rows="3"
+              placeholder="Briefly describe your organization and the people you serve"
+              [disabled]="loading"
+              [class.invalid-input]="shouldShowFieldError('organizationAbout')"
+              [attr.aria-invalid]="shouldShowFieldError('organizationAbout')"
+              aria-describedby="organizationAbout-error"
+              (ngModelChange)="onFieldInput('organizationAbout')"
+              (blur)="onFieldBlur('organizationAbout')"
+              required
+            ></textarea>
+
+            @if (shouldShowFieldError('organizationAbout')) {
+              <small id="organizationAbout-error" class="field-error" role="alert">
+                {{ fieldErrors.organizationAbout }}
+              </small>
+            }
+
+          </div>
+
+          <fieldset class="food-support-fields">
+            <legend>Food your organization can accept</legend>
+            <p>Recommendations will prioritize donations that fit these requirements.</p>
+
+            <span class="food-support-label">Food types</span>
+            @for (foodType of foodTypeOptions; track foodType) {
+              <label class="food-support-option">
+              <input
+                type="checkbox"
+                [checked]="user.supportedFoodTypes.includes(foodType)"
+                (change)="toggleSupportedFoodType(foodType, $event)"
+              />
+              {{ foodType }}
+              </label>
+            }
+
+            <span class="food-support-label">Dietary preferences</span>
+            @for (preference of foodPreferenceOptions; track preference) {
+              <label class="food-support-option">
+              <input
+                type="checkbox"
+                [checked]="user.supportedFoodPreferences.includes(preference)"
+                (change)="toggleSupportedFoodPreference(preference, $event)"
+              />
+              {{ preference }}
+              </label>
+            }
+          </fieldset>
+
+
+          <!-- PEOPLE -->
+          <div class="form-group" [class.has-error]="shouldShowFieldError('numberOfPeople')">
+
+            <label for="numberOfPeople">
+              Number of People Served
+            </label>
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">
+                👥
+              </span>
+
+              <input
+                id="numberOfPeople"
+                type="number"
+                [(ngModel)]="user.numberOfPeople"
+                name="numberOfPeople"
+                min="1"
+                step="1"
+                placeholder="Number of people"
+                [disabled]="loading"
+                [class.invalid-input]="shouldShowFieldError('numberOfPeople')"
+                [attr.aria-invalid]="shouldShowFieldError('numberOfPeople')"
+                aria-describedby="numberOfPeople-error"
+                (ngModelChange)="onFieldInput('numberOfPeople')"
+                (blur)="onFieldBlur('numberOfPeople')"
+                required
+              />
+
+            </div>
+
+            @if (shouldShowFieldError('numberOfPeople')) {
+              <small id="numberOfPeople-error" class="field-error" role="alert">
+                {{ fieldErrors.numberOfPeople }}
+              </small>
+            }
+
+          </div>
+
+
+          <!-- PASSWORD ROW -->
+          <div class="form-row">
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('password')">
+
+              <label for="ngoPassword">
+                Password
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  🔒
+                </span>
+
+                <input
+                  id="ngoPassword"
+                  [type]="showPassword ? 'text' : 'password'"
+                  [(ngModel)]="user.password"
+                  name="ngoPassword"
+                  placeholder="Create password"
+                  autocomplete="new-password"
+                  [disabled]="loading"
+                  maxlength="128"
+                  [class.invalid-input]="shouldShowFieldError('password')"
+                  [attr.aria-invalid]="shouldShowFieldError('password')"
+                  aria-describedby="ngoPassword-error"
+                  (ngModelChange)="onFieldInput('password')"
+                  (blur)="onFieldBlur('password')"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="togglePassword()"
+                  [disabled]="loading"
+                >
+                  {{ showPassword ? '◉' : '◌' }}
+                </button>
+
+              </div>
+
+              @if (shouldShowFieldError('password')) {
+                <small id="ngoPassword-error" class="field-error" role="alert">
+                  {{ fieldErrors.password }}
+                </small>
+              }
+
+            </div>
+
+
+            <div class="form-group" [class.has-error]="shouldShowFieldError('confirmPassword')">
+
+              <label for="ngoConfirmPassword">
+                Confirm Password
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">
+                  🔒
+                </span>
+
+                <input
+                  id="ngoConfirmPassword"
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  [(ngModel)]="user.confirmPassword"
+                  name="ngoConfirmPassword"
+                  placeholder="Confirm password"
+                  autocomplete="new-password"
+                  [disabled]="loading"
+                  maxlength="128"
+                  [class.invalid-input]="shouldShowFieldError('confirmPassword')"
+                  [attr.aria-invalid]="shouldShowFieldError('confirmPassword')"
+                  aria-describedby="ngoConfirmPassword-error"
+                  (ngModelChange)="onFieldInput('confirmPassword')"
+                  (blur)="onFieldBlur('confirmPassword')"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="toggleConfirmPassword()"
+                  [disabled]="loading"
+                >
+                  {{ showConfirmPassword ? '◉' : '◌' }}
+                </button>
+
+              </div>
+
+              @if (shouldShowFieldError('confirmPassword')) {
+                <small id="ngoConfirmPassword-error" class="field-error" role="alert">
+                  {{ fieldErrors.confirmPassword }}
+                </small>
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- ====================================
+               LOCATION
+          ===================================== -->
+
+          <div class="location-section">
+
+            <div class="location-heading">
+
+              <div class="location-icon">
+                📍
+              </div>
+
+              <div>
+
+                <h3>
+                  Organization Location
+                </h3>
+
+                <p>
+                  Your location helps MealMitra find
+                  nearby donation opportunities.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <!-- ADDRESS -->
+            <div class="form-group" [class.has-error]="shouldShowFieldError('address')">
+
+              <label for="address">
+                Organization Address
+              </label>
+
+              <textarea
+                id="address"
+                [(ngModel)]="user.address"
+                name="address"
+                rows="2"
+                placeholder="Enter complete organization address"
+                [disabled]="loading"
+                  [class.invalid-input]="shouldShowFieldError('address')"
+                  [attr.aria-invalid]="shouldShowFieldError('address')"
+                  aria-describedby="address-error"
+                  (ngModelChange)="onFieldInput('address')"
+                  (blur)="onFieldBlur('address')"
+                  required
+                ></textarea>
+
+              @if (shouldShowFieldError('address')) {
+                <small id="address-error" class="field-error" role="alert">
+                  {{ fieldErrors.address }}
+                </small>
+              }
+
+            </div>
+
+
+            <!-- LOCATION BUTTON -->
+            <button
+              type="button"
+              class="location-button"
+              (click)="getLocation()"
+              [disabled]="loading"
+            >
+
+              <span>
+                📍
+              </span>
+
+              <span>
+                Get Current Location
+              </span>
+
+            </button>
+
+            @if (shouldShowFieldError('location')) {
+              <small id="location-error" class="field-error" role="alert">
+                {{ fieldErrors.location }}
+              </small>
+            }
+
+
+            <!-- COORDINATES -->
+            @if (
+              user.latitude !== 0 &&
+              user.longitude !== 0
+            ) {
+
+              <div class="coordinates">
+
+                <div class="coordinate-item">
+
+                  <span>
+                    Latitude
+                  </span>
+
+                  <strong>
+                    {{ user.latitude | number:'1.4-4' }}
+                  </strong>
+
+                </div>
+
+                <div class="coordinate-item">
+
+                  <span>
+                    Longitude
+                  </span>
+
+                  <strong>
+                    {{ user.longitude | number:'1.4-4' }}
+                  </strong>
+
+                </div>
+
+                <div class="location-captured">
+                  ✓ Location captured successfully
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <!-- NGO BUTTON -->
+          <button
+            type="submit"
+            class="register-button"
+            [disabled]="loading"
+          >
+
+            @if (!loading) {
+
+              <span>
+                Create NGO Account
+              </span>
+
+              <span class="button-arrow">
+                →
+              </span>
+
+            }
+
+            @if (loading) {
+
+              <span class="spinner"></span>
+
+              <span>
+                Creating account...
+              </span>
+
+            }
+
+          </button>
+
+        </form>
+
+      }
+
+
+      <!-- ========================================
+           LOGIN
+      ========================================= -->
+
+      <div class="login-section">
+
+        <span>
+          Already have an account?
+        </span>
+
+        <a routerLink="/login">
+          Sign in
+        </a>
+
+      </div>
+
+
+      <!-- DIVIDER -->
+      <div class="divider"></div>
+
+
+      <!-- HOME -->
+      <a
+        routerLink="/"
+        class="back-home"
+      >
+
+        <span>
+          ←
+        </span>
+
+        Back to Home
+
+      </a>
+
+    </div>
+
+  </section>
+
+</div>

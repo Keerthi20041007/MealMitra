@@ -1,0 +1,594 @@
+<div class="home-page">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+
+      <a routerLink="/" class="logo">
+        <div class="logo-icon">🍃</div>
+
+        <div class="logo-text">
+          <div class="logo-name">MealMitra</div>
+          <div class="logo-tagline">Share Food. Share Hope.</div>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a routerLink="/" class="nav-link active">Home</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#why-mealmitra" class="nav-link">Why MealMitra</a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+
+      <div class="nav-buttons">
+        <a routerLink="/login" class="login-btn">Login</a>
+        <a routerLink="/register" class="signup-btn">Get Started</a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-container">
+
+      <div class="hero-content">
+
+        <div class="hero-badge">
+          <span>●</span>
+          Reducing food waste, one meal at a time
+        </div>
+
+        <h1>
+          Turn Surplus Food
+          <span>Into Someone's Hope.</span>
+        </h1>
+
+        <p class="hero-description">
+          MealMitra connects restaurants, households and event organizers
+          with nearby NGOs so that surplus food reaches people who need it
+          instead of becoming waste.
+        </p>
+
+        <div class="hero-buttons">
+
+          <a routerLink="/register" class="primary-btn">
+            Donate Food
+            <span>→</span>
+          </a>
+
+          <a routerLink="/register" class="outline-btn">
+            Join as NGO
+          </a>
+
+        </div>
+
+        <div class="hero-note">
+          🌱 Simple &nbsp; • &nbsp; 📍 Location based &nbsp; • &nbsp; 🤝 Community driven
+        </div>
+
+      </div>
+
+
+      <!-- HERO CARD -->
+      <div class="hero-right">
+
+        <div class="hero-circle"></div>
+
+        <div class="donation-card">
+
+          <div class="donation-card-top">
+            <span class="available">● Live Impact</span>
+            <span class="time">From completed donations</span>
+          </div>
+
+          <div class="food-illustration">
+            🍛
+          </div>
+
+          <div class="donation-info">
+
+            <h3>Community Impact</h3>
+
+            <p>
+              Real totals from food donations completed on MealMitra.
+            </p>
+
+            <div class="donation-details">
+
+              <span>
+                🍱
+                {{ impactStats ? (impactStats.foodRescuedKg | number:'1.0-0') : '—' }}
+                kg rescued
+              </span>
+
+              <span>
+                👥
+                {{ impactStats ? (impactStats.peopleServed | number) : '—' }}
+                people served
+              </span>
+
+            </div>
+
+            <div class="location">
+              📊 Updated from the database
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="accepted-card">
+
+          <div class="accepted-icon">
+            ✓
+          </div>
+
+          <div>
+            <strong>Donation Accepted</strong>
+            <small>Nearby NGO has accepted this request</small>
+          </div>
+
+        </div>
+
+
+        <div class="floating-card food-saved">
+
+          <div class="floating-icon">🌱</div>
+
+          <div>
+            <strong>
+              {{ impactStats ? (impactStats.foodRescuedKg | number:'1.0-0') : '—' }} kg
+            </strong>
+            <small>Food rescued</small>
+          </div>
+
+        </div>
+
+
+        <div class="floating-card meals">
+
+          <div class="floating-icon">🍽️</div>
+
+          <div>
+            <strong>
+              {{ impactStats ? (impactStats.peopleServed | number) : '—' }}
+            </strong>
+            <small>Meals shared</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- STATS -->
+  <section class="stats-section">
+
+    <div class="stats-container">
+
+      <div class="stat">
+        <strong>
+          {{ impactStats ? (impactStats.totalDonations | number) : '—' }}
+        </strong>
+        <span>Food Donations</span>
+      </div>
+
+      <div class="stat">
+        <strong>
+          {{ impactStats ? (impactStats.peopleServed | number) : '—' }}
+        </strong>
+        <span>People Served</span>
+      </div>
+
+      <div class="stat">
+        <strong>
+          {{ impactStats ? (impactStats.ngoPartners | number) : '—' }}
+        </strong>
+        <span>NGO Partners</span>
+      </div>
+
+      <div class="stat">
+        <strong>
+          {{ impactStats ? (impactStats.completedDonations | number) : '—' }}
+        </strong>
+        <span>Completed Donations</span>
+
+      </div>
+
+    </div>
+
+    <p
+      class="stats-error"
+      *ngIf="statsError"
+      role="status"
+    >
+      {{ statsError }}
+    </p>
+
+  </section>
+
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+
+    <div class="section-header">
+
+      <span class="section-label">
+        HOW IT WORKS
+      </span>
+
+      <h2>
+        From surplus food to
+        <span>someone's plate.</span>
+      </h2>
+
+      <p>
+        We make food donation simple, fast and meaningful.
+      </p>
+
+    </div>
+
+
+    <div class="steps-container">
+
+      <div class="step-card">
+
+        <div class="step-top">
+          <span>01</span>
+        </div>
+
+        <div class="step-icon">
+          📦
+        </div>
+
+        <h3>Donate</h3>
+
+        <p>
+          Tell us about your surplus food, quantity,
+          location and pickup deadline.
+        </p>
+
+      </div>
+
+
+      <div class="step-card">
+
+        <div class="step-top">
+          <span>02</span>
+        </div>
+
+        <div class="step-icon">
+          🤖
+        </div>
+
+        <h3>Match</h3>
+
+        <p>
+          MealMitra identifies suitable nearby NGOs
+          based on location and urgency.
+        </p>
+
+      </div>
+
+
+      <div class="step-card">
+
+        <div class="step-top">
+          <span>03</span>
+        </div>
+
+        <div class="step-icon">
+          🤝
+        </div>
+
+        <h3>Collect</h3>
+
+        <p>
+          The NGO accepts the request and a volunteer
+          collects the food on time.
+        </p>
+
+      </div>
+
+
+      <div class="step-card">
+
+        <div class="step-top">
+          <span>04</span>
+        </div>
+
+        <div class="step-icon">
+          ❤️
+        </div>
+
+        <h3>Impact</h3>
+
+        <p>
+          Your surplus food reaches people who need it
+          instead of becoming waste.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- WHY MEALMITRA -->
+  <section class="why-section" id="why-mealmitra">
+
+    <div class="why-container">
+
+      <div class="why-left">
+
+        <div class="why-icon">
+          🌱
+        </div>
+
+        <span class="section-label">
+          WHY MEALMITRA?
+        </span>
+
+        <h2>
+          Every meal deserves
+          <span>a chance to make a difference.</span>
+        </h2>
+
+        <p>
+          Every day, perfectly good food is thrown away while
+          many people struggle to find their next meal.
+          MealMitra bridges this gap by connecting surplus food
+          with organizations that can distribute it to communities
+          in need.
+        </p>
+
+        <a routerLink="/register" class="learn-btn">
+          Make a Difference
+          <span>→</span>
+        </a>
+
+      </div>
+
+
+      <div class="features">
+
+        <div class="feature-card">
+
+          <div class="feature-icon">
+            📍
+          </div>
+
+          <div>
+            <h3>Location-based NGO Matching</h3>
+
+            <p>
+              Find suitable NGOs near the donation location.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">
+            ⚡
+          </div>
+
+          <div>
+            <h3>Urgent Donation Prioritization</h3>
+
+            <p>
+              Time-sensitive food donations can receive priority.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">
+            🚚
+          </div>
+
+          <div>
+            <h3>Volunteer Pickup Coordination</h3>
+
+            <p>
+              Coordinate pickup and delivery efficiently.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">
+            📊
+          </div>
+
+          <div>
+            <h3>Real-time Donation Tracking</h3>
+
+            <p>
+              Track donation status from creation to completion.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+
+    <div class="about-container">
+
+      <div class="about-visual">
+
+        <div class="about-main-circle">
+          🍃
+        </div>
+
+        <div class="about-small-circle">
+          ❤️
+        </div>
+
+      </div>
+
+
+      <div class="about-content">
+
+        <span class="section-label">
+          ABOUT MEALMITRA
+        </span>
+
+        <h2>
+          Food should be shared,
+          <span>not wasted.</span>
+        </h2>
+
+        <p>
+          MealMitra is a food donation and distribution platform
+          designed to connect food donors with NGOs and volunteers.
+        </p>
+
+        <p>
+          Our goal is simple: make it easier for surplus food to
+          reach people who need it while reducing unnecessary food waste.
+        </p>
+
+        <div class="about-points">
+
+          <div>✓ Connect donors and NGOs</div>
+          <div>✓ Smart location-based matching</div>
+          <div>✓ Faster food pickup coordination</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CTA -->
+  <section class="cta-section">
+
+    <div class="cta-content">
+
+      <div class="cta-icon">
+        🍃
+      </div>
+
+      <h2>
+        Have extra food?
+        <span>Someone needs it.</span>
+      </h2>
+
+      <p>
+        Join MealMitra and turn surplus food into meaningful impact.
+      </p>
+
+      <div class="cta-buttons">
+
+        <a routerLink="/register" class="cta-main">
+          Start Donating
+          <span>→</span>
+        </a>
+
+        <a routerLink="/register" class="cta-outline">
+          Register as NGO
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+
+    <div class="footer-container">
+
+      <div class="footer-brand">
+
+        <a routerLink="/" class="logo footer-logo">
+
+          <div class="logo-icon">
+            🍃
+          </div>
+
+          <div class="logo-text">
+            <div class="logo-name">MealMitra</div>
+            <div class="logo-tagline">Share Food. Share Hope.</div>
+          </div>
+
+        </a>
+
+        <p>
+          Connecting surplus food with people who need it.
+        </p>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h4>Platform</h4>
+
+        <a routerLink="/login">Login</a>
+        <a routerLink="/register">Register</a>
+        <a routerLink="/register">Donate Food</a>
+        <a routerLink="/register">Join as NGO</a>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h4>Explore</h4>
+
+        <a href="#how-it-works">How It Works</a>
+        <a href="#why-mealmitra">Why MealMitra</a>
+        <a href="#about">About</a>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <span>
+        © 2026 MealMitra. All rights reserved.
+      </span>
+
+      <span>
+        Built to reduce food waste and create impact.
+      </span>
+
+    </div>
+
+  </footer>
+
+</div>

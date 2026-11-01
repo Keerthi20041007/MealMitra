@@ -1,0 +1,713 @@
+<div class="page-container">
+
+  <!-- ==================================================
+       HEADER
+  ================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-left">
+
+      <!-- BACK TO DASHBOARD -->
+
+      <button
+        type="button"
+        class="back-dashboard-btn"
+        (click)="goToDashboard()"
+      >
+        <span class="back-arrow">←</span>
+        <span>Back to Dashboard</span>
+      </button>
+
+      <p class="page-label">
+        DONOR PORTAL
+      </p>
+
+      <h1>
+        My Donations
+      </h1>
+
+      <p class="page-description">
+        Track and manage the food donations you have created.
+      </p>
+
+    </div>
+
+    <!-- CREATE DONATION -->
+
+    <button
+      class="create-btn"
+      type="button"
+      (click)="createDonation()"
+    >
+      <span>+</span>
+      Create Donation
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="loading-container"
+    *ngIf="loading"
+  >
+    <div class="spinner"></div>
+
+    <p>
+      Loading your donations...
+    </p>
+  </div>
+
+
+  <!-- ==================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="error-box"
+    *ngIf="!loading && errorMessage"
+  >
+
+    <div class="error-icon">
+      !
+    </div>
+
+    <div>
+
+      <h3>
+        Unable to load donations
+      </h3>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      (click)="loadDonations()"
+    >
+      Try Again
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       MAIN CONTENT
+  ================================================== -->
+
+  <div
+    *ngIf="!loading && !errorMessage"
+  >
+
+    <!-- ==================================================
+         STATISTICS
+    ================================================== -->
+
+    <div class="stats-grid">
+
+      <!-- TOTAL DONATIONS -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon total-icon">
+          🍱
+        </div>
+
+        <div>
+
+          <p class="stat-title">
+            Total Donations
+          </p>
+
+          <h2>
+            {{ totalDonations }}
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <!-- PENDING -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon pending-icon">
+          ⏳
+        </div>
+
+        <div>
+
+          <p class="stat-title">
+            Pending
+          </p>
+
+          <h2>
+            {{ pendingDonations }}
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <!-- ACCEPTED -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon accepted-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <p class="stat-title">
+            Accepted
+          </p>
+
+          <h2>
+            {{ acceptedDonations }}
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <!-- COMPLETED -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon completed-icon">
+          ❤️
+        </div>
+
+        <div>
+
+          <p class="stat-title">
+            Completed
+          </p>
+
+          <h2>
+            {{ completedDonations }}
+          </h2>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="donations.length === 0"
+    >
+
+      <div class="empty-icon">
+        🍲
+      </div>
+
+      <h2>
+        No donations yet
+      </h2>
+
+      <p>
+        You haven't created any food donations.
+        Start sharing surplus food with people in need.
+      </p>
+
+      <button
+        type="button"
+        class="empty-create-btn"
+        (click)="createDonation()"
+      >
+        Create Your First Donation
+      </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         DONATIONS SECTION
+    ================================================== -->
+
+    <div
+      class="donations-section"
+      *ngIf="donations.length > 0"
+    >
+
+      <!-- SECTION HEADING -->
+
+      <div class="section-heading">
+
+        <div>
+
+          <h2>
+            Your Contributions
+          </h2>
+
+          <p>
+            Every donation helps reduce food waste.
+          </p>
+
+        </div>
+
+        <span class="donation-count">
+
+          {{ donations.length }}
+
+          donation{{ donations.length !== 1 ? 's' : '' }}
+
+        </span>
+
+      </div>
+
+
+      <!-- ==================================================
+           DONATION LIST
+      ================================================== -->
+
+      <div class="donation-list">
+
+        <!-- ==================================================
+             DONATION CARD
+        ================================================== -->
+
+        <div
+          class="donation-card"
+          *ngFor="let donation of donations"
+        >
+
+          <!-- ==================================================
+               CARD TOP
+          ================================================== -->
+
+          <div class="card-top">
+
+            <div>
+
+              <h3>
+                {{ donation.foodName }}
+              </h3>
+
+              <p class="food-type">
+                {{ donation.foodType }}
+              </p>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(donation.status)"
+            >
+              {{ getStatusText(donation.status) }}
+            </span>
+
+          </div>
+
+
+          <!-- ==================================================
+               FOOD DETAILS
+          ================================================== -->
+
+          <div class="details-grid">
+
+            <!-- FOOD PREFERENCE -->
+
+            <div class="detail-item">
+
+              <span class="detail-icon">
+                🥗
+              </span>
+
+              <div>
+
+                <span class="detail-label">
+                  Preference
+                </span>
+
+                <strong>
+                  {{ donation.foodPreference }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- QUANTITY -->
+
+            <div class="detail-item">
+
+              <span class="detail-icon">
+                ⚖️
+              </span>
+
+              <div>
+
+                <span class="detail-label">
+                  Quantity
+                </span>
+
+                <strong>
+                  {{ donation.quantity }}
+                  {{ donation.quantityUnit }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- SERVINGS -->
+
+            <div class="detail-item">
+
+              <span class="detail-icon">
+                👥
+              </span>
+
+              <div>
+
+                <span class="detail-label">
+                  Servings
+                </span>
+
+                <strong>
+                  {{ donation.servings }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- PICKUP DEADLINE -->
+
+            <div class="detail-item">
+
+              <span class="detail-icon">
+                ⏰
+              </span>
+
+              <div>
+
+                <span class="detail-label">
+                  Pickup Deadline
+                </span>
+
+                <strong
+                  [class.deadline-passed]="
+                    isDeadlinePassed(donation.pickupDeadline)
+                  "
+                >
+                  {{ formatDateTime(donation.pickupDeadline) }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ==================================================
+               PICKUP LOCATION
+          ================================================== -->
+
+          <div class="address-section">
+
+            <span class="detail-icon">
+              📍
+            </span>
+
+            <div>
+
+              <span class="detail-label">
+                Pickup Location
+              </span>
+
+              <p>
+                {{ donation.pickupAddress }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- ==================================================
+               DESCRIPTION
+          ================================================== -->
+
+          <div
+            class="description-section"
+            *ngIf="donation.description"
+          >
+
+            <span class="detail-label">
+              Description
+            </span>
+
+            <p>
+              {{ donation.description }}
+            </p>
+
+          </div>
+
+
+          <!-- ==================================================
+               ACCEPTED NGO
+          ================================================== -->
+
+          <div
+            class="accepted-ngo-section"
+            *ngIf="donation.acceptedBy"
+          >
+
+            <span class="detail-icon">
+              🏢
+            </span>
+
+            <div>
+
+              <span class="detail-label">
+                Accepted By
+              </span>
+
+              <strong>
+                {{ donation.acceptedBy.organizationName }}
+              </strong>
+
+              <p
+                *ngIf="
+                  donation.acceptedBy.organizationPhone
+                "
+              >
+                {{ donation.acceptedBy.organizationPhone }}
+              </p>
+
+            </div>
+
+          </div>
+
+          <section
+            class="recommendation-section"
+            *ngIf="donation.status?.toLowerCase() === 'pending'"
+          >
+            <p class="recommendation-note">
+              Pickup time is an estimate using a 25 km/h average travel speed plus 15 minutes for preparation.
+            </p>
+
+            <button
+              type="button"
+              class="recommendation-toggle"
+              [disabled]="recommendationLoadingId === donation._id"
+              (click)="toggleRecommendations(donation)"
+            >
+              {{
+                recommendationLoadingId === donation._id
+                  ? 'Finding best NGO matches...'
+                  : expandedRecommendationId === donation._id
+                    ? 'Hide NGO recommendations'
+                    : 'Find best NGO matches'
+              }}
+            </button>
+
+            <p
+              class="recommendation-error"
+              *ngIf="recommendationErrors[donation._id]"
+            >
+              {{ recommendationErrors[donation._id] }}
+            </p>
+
+            <p
+              class="recommendation-empty"
+              *ngIf="
+                expandedRecommendationId === donation._id &&
+                !recommendationLoadingId &&
+                !recommendationErrors[donation._id] &&
+                recommendationsByDonation[donation._id]?.length === 0
+              "
+            >
+              No NGO currently meets the food, capacity, location, and deadline requirements.
+            </p>
+
+            <article
+              class="recommendation-item"
+              *ngFor="let ngo of recommendationsByDonation[donation._id]; let rank = index"
+            >
+              <div class="recommendation-heading">
+                <strong>{{ rank + 1 }}. {{ ngo.name }}</strong>
+                <span>{{ ngo.matchScore }}% match</span>
+              </div>
+              <p>
+                {{ ngo.distanceKm }} km away ·
+                {{ ngo.availableCapacity }} servings of capacity ·
+                estimated pickup in {{ ngo.estimatedPickupMinutes }} min
+              </p>
+              <p *ngIf="ngo.address">{{ ngo.address }}</p>
+              <ul>
+                <li *ngFor="let reason of ngo.matchReasons">{{ reason }}</li>
+              </ul>
+            </article>
+          </section>
+
+
+          <!-- ==================================================
+               CARD FOOTER
+          ================================================== -->
+
+          <div class="card-footer">
+
+            <!-- CREATED -->
+
+            <div class="created-info">
+
+              <span>
+                Created
+              </span>
+
+              <strong>
+                {{ formatDateTime(donation.createdAt) }}
+              </strong>
+
+            </div>
+
+
+            <!-- DONATION ID -->
+
+            <div class="donation-id">
+
+              ID:
+              {{ donation._id }}
+
+            </div>
+
+
+            <!-- ==================================================
+                 CANCEL DONATION
+            ================================================== -->
+
+            <div
+              class="cancel-section"
+              *ngIf="
+                donation.status?.toLowerCase() === 'pending'
+              "
+            >
+
+              <!-- Cancel button: available within 10 minutes -->
+
+              <button
+                *ngIf="isCancellationAvailable(donation)"
+                type="button"
+                class="cancel-btn"
+                [disabled]="cancellingId === donation._id"
+                (click)="cancelDonation(donation._id)"
+              >
+
+                <span
+                  *ngIf="cancellingId !== donation._id"
+                >
+                  Cancel Donation
+                </span>
+
+                <span
+                  *ngIf="cancellingId === donation._id"
+                >
+                  Cancelling...
+                </span>
+
+              </button>
+
+
+              <!-- Expired -->
+
+              <button
+                *ngIf="!isCancellationAvailable(donation)"
+                type="button"
+                class="cancel-btn cancel-expired-btn"
+                disabled
+              >
+                Cancellation Expired
+              </button>
+
+
+              <!-- Remaining time -->
+
+              <span
+                class="cancellation-timer"
+                *ngIf="isCancellationAvailable(donation)"
+              >
+                {{ getCancellationRemaining(donation) }}
+                remaining
+              </span>
+
+            </div>
+
+          </div>
+          <!-- END CARD FOOTER -->
+
+
+        </div>
+        <!-- END DONATION CARD -->
+
+
+      </div>
+      <!-- END DONATION LIST -->
+
+
+    </div>
+    <!-- END DONATIONS SECTION -->
+
+
+    <!-- ==================================================
+         MOTIVATION
+    ================================================== -->
+
+    <div
+      class="impact-message"
+      *ngIf="donations.length > 0"
+    >
+
+      <div class="impact-icon">
+        🌱
+      </div>
+
+      <div>
+
+        <h3>
+          Thank you for making a difference!
+        </h3>
+
+        <p>
+          Your contributions help reduce food waste
+          and make surplus food available to those
+          who need it.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+  <!-- END MAIN CONTENT -->
+
+
+</div>
+<!-- END PAGE CONTAINER -->

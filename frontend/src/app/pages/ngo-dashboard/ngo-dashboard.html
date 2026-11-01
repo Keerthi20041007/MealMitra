@@ -1,0 +1,2665 @@
+<div class="dashboard">
+
+  <section
+    *ngIf="supportAssistantOpen"
+    class="support-chat"
+    role="dialog"
+    aria-labelledby="support-chat-title"
+    aria-modal="false"
+  >
+    <header class="support-chat-header">
+      <div class="support-chat-brand">
+        <span class="support-chat-avatar" aria-hidden="true">✦</span>
+        <div>
+          <strong id="support-chat-title">MealMitra AI Assistant</strong>
+          <span>Here to help your organization</span>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="support-chat-close"
+        aria-label="Close support assistant"
+        (click)="toggleSupportAssistant()"
+      >
+        ×
+      </button>
+    </header>
+
+    <div class="support-chat-messages" role="log" aria-live="polite">
+      <div
+        *ngFor="let message of supportAssistantMessages"
+        class="support-chat-message"
+        [class.support-chat-user]="message.role === 'user'"
+        [class.support-chat-assistant]="message.role === 'model'"
+      >
+        {{ message.text }}
+      </div>
+      <div
+        *ngIf="supportAssistantSending"
+        class="support-chat-message support-chat-assistant"
+        role="status"
+      >
+        Thinking…
+      </div>
+    </div>
+
+    <p *ngIf="supportAssistantError" class="support-chat-error" role="alert">
+      {{ supportAssistantError }}
+    </p>
+
+    <div class="support-chat-compose">
+      <textarea
+        aria-label="Message the MealMitra AI assistant"
+        placeholder="Ask how to accept a donation..."
+        rows="2"
+        maxlength="2000"
+        [value]="supportAssistantInput"
+        [disabled]="supportAssistantSending"
+        (input)="supportAssistantInput = $any($event.target).value"
+        (keydown)="handleSupportInputKeydown($event)"
+      ></textarea>
+      <button
+        type="button"
+        class="support-chat-send"
+        aria-label="Send message"
+        [disabled]="!supportAssistantInput.trim() || supportAssistantSending"
+        (click)="sendSupportMessage()"
+      >
+        Send
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside class="sidebar">
+
+    <!-- BRAND -->
+    <div class="brand">
+
+      <div class="brand-mark">
+        <span>🌿</span>
+      </div>
+
+      <div class="brand-text">
+        <h2>MealMitra</h2>
+        <span>NGO Portal</span>
+      </div>
+
+    </div>
+
+
+    <!-- SIDEBAR LABEL -->
+    <div class="sidebar-label">
+      WORKSPACE
+    </div>
+
+
+    <!-- NAVIGATION -->
+    <nav class="navigation">
+
+      <!-- OVERVIEW -->
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeSection === 'dashboard'"
+        (click)="showSection('dashboard')"
+      >
+        <span class="nav-icon">⌂</span>
+        <span>Overview</span>
+      </button>
+
+
+      <!-- AVAILABLE DONATIONS -->
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeSection === 'available'"
+        (click)="showSection('available')"
+      >
+
+        <span class="nav-icon">▣</span>
+
+        <span>
+          Available Donations
+        </span>
+
+        <span
+          class="nav-count"
+          *ngIf="donations.length > 0"
+        >
+          {{ donations.length }}
+        </span>
+
+      </button>
+
+
+      <!-- MY COLLECTIONS -->
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeSection === 'accepted'"
+        (click)="showSection('accepted')"
+      >
+
+        <span class="nav-icon">✓</span>
+
+        <span>
+          My Collections
+        </span>
+
+        <span
+          class="nav-count"
+          *ngIf="acceptedDonations.length > 0"
+        >
+          {{ acceptedDonations.length }}
+        </span>
+
+      </button>
+
+
+      <!-- NOTIFICATIONS -->
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeSection === 'notifications'"
+        (click)="showSection('notifications')"
+      >
+
+        <span class="nav-icon">♢</span>
+
+        <span>
+          Notifications
+        </span>
+
+      </button>
+
+
+      <!-- PROFILE -->
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeSection === 'profile'"
+        (click)="showSection('profile')"
+      >
+
+        <span class="nav-icon">○</span>
+
+        <span>
+          Organization Profile
+        </span>
+
+      </button>
+
+    </nav>
+
+
+    <!-- SIDEBAR BOTTOM -->
+    <div class="sidebar-bottom">
+
+      <!-- HELP -->
+      <button
+        type="button"
+        class="help-card"
+        aria-label="Open MealMitra AI support assistant"
+        [attr.aria-expanded]="supportAssistantOpen"
+        (click)="toggleSupportAssistant()"
+      >
+
+        <div class="help-icon">
+          ?
+        </div>
+
+        <div>
+
+          <strong>
+            Need assistance?
+          </strong>
+
+          <span>
+            Ask the AI assistant
+          </span>
+
+        </div>
+
+      </button>
+
+      <!-- LOGOUT -->
+      <button
+        type="button"
+        class="logout-btn"
+        (click)="logout()"
+      >
+
+        <span>
+          ↪
+        </span>
+
+        Sign out
+
+      </button>
+
+    </div>
+
+  </aside>
+
+
+
+  <!-- =====================================================
+       MAIN CONTENT
+  ====================================================== -->
+
+  <main class="main">
+
+
+    <!-- ===================================================
+         TOP HEADER
+    ==================================================== -->
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <span class="eyebrow">
+          NGO OPERATIONS
+        </span>
+
+        <h1>
+
+          {{
+            activeSection === 'dashboard'
+              ? 'Good day, ' + ngoName
+
+              : activeSection === 'available'
+              ? 'Available Donations'
+
+              : activeSection === 'accepted'
+              ? 'My Collections'
+
+              : activeSection === 'notifications'
+              ? 'Notifications'
+
+              : 'Organization Profile'
+          }}
+
+        </h1>
+
+
+        <p>
+
+          {{
+            activeSection === 'dashboard'
+              ? 'Manage food donations and make a meaningful impact in your community.'
+
+              : activeSection === 'available'
+              ? 'Discover surplus food donations ready for collection.'
+
+              : activeSection === 'accepted'
+              ? 'Track every donation your organization has accepted.'
+
+              : activeSection === 'notifications'
+              ? 'Important updates and activity from MealMitra.'
+
+              : 'View your organization information registered with MealMitra.'
+          }}
+
+        </p>
+
+      </div>
+
+
+      <!-- TOP RIGHT -->
+      <div class="topbar-right">
+
+        <button
+          type="button"
+          class="icon-button"
+          title="Refresh dashboard"
+          (click)="refreshDashboard()"
+        >
+          ↻
+        </button>
+
+
+        <div class="user-chip">
+
+          <div class="user-avatar">
+            {{ ngoName.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="user-details">
+
+            <strong>
+              {{ ngoName }}
+            </strong>
+
+            <span>
+              NGO
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+
+    <!-- ===================================================
+         ALERTS
+    ==================================================== -->
+
+    <!-- SUCCESS -->
+    <div
+      class="alert success-alert"
+      *ngIf="successMessage"
+    >
+
+      <span class="alert-symbol">
+        ✓
+      </span>
+
+      <span>
+        {{ successMessage }}
+      </span>
+
+    </div>
+
+
+    <!-- ERROR -->
+    <div
+      class="alert error-alert"
+      *ngIf="
+        errorMessage &&
+        !loading &&
+        !loadingAccepted
+      "
+    >
+
+      <span class="alert-symbol">
+        !
+      </span>
+
+      <span>
+        {{ errorMessage }}
+      </span>
+
+    </div>
+
+
+
+    <!-- ===================================================
+         OVERVIEW / DASHBOARD
+    ==================================================== -->
+
+    <ng-container
+      *ngIf="activeSection === 'dashboard'"
+    >
+
+      <!-- =================================================
+           STATISTICS
+      ================================================== -->
+
+      <section class="stats-grid">
+
+
+        <!-- AVAILABLE DONATIONS -->
+        <button
+          type="button"
+          class="stat-card stat-clickable"
+          (click)="showSection('available')"
+        >
+
+          <div class="stat-icon green">
+            ▣
+          </div>
+
+          <div class="stat-content">
+
+            <span>
+              Available Donations
+            </span>
+
+            <strong>
+              {{ availableDonationCount }}
+            </strong>
+
+            <small>
+              Ready for collection
+            </small>
+
+          </div>
+
+        </button>
+
+
+        <!-- URGENT DONATIONS -->
+        <div class="stat-card">
+
+          <div class="stat-icon orange">
+            !
+          </div>
+
+          <div class="stat-content">
+
+            <span>
+              Urgent Donations
+            </span>
+
+            <strong>
+              {{ urgentDonations }}
+            </strong>
+
+            <small>
+              Deadline within 2 hours
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- PEOPLE IN ORGANIZATION -->
+        <div class="stat-card">
+
+          <div class="stat-icon blue">
+            ♧
+          </div>
+
+          <div class="stat-content">
+
+            <span>
+              People in Organization
+            </span>
+
+            <strong>
+              {{ peopleToServe }}
+            </strong>
+
+            <small>
+              Registered NGO capacity
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- ACTIVE COLLECTIONS -->
+        <div class="stat-card">
+
+          <div class="stat-icon purple">
+            ✓
+          </div>
+
+          <div class="stat-content">
+
+            <span>
+              Active Collections
+            </span>
+
+            <strong>
+              {{ activeCollections }}
+            </strong>
+
+            <small>
+              Accepted or picked up
+            </small>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           DASHBOARD CONTENT
+      ================================================== -->
+
+      <section class="dashboard-layout">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================== -->
+
+        <div class="main-column">
+
+
+          <!-- SECTION HEADER -->
+          <div class="section-header">
+
+            <div>
+
+              <span class="section-eyebrow">
+                OPPORTUNITIES
+              </span>
+
+              <h2>
+                Donations Near You
+              </h2>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="showSection('available')"
+            >
+              View all →
+            </button>
+
+          </div>
+
+
+          <!-- LOADING -->
+          <div
+            class="state-card"
+            *ngIf="loading"
+          >
+
+            <div class="spinner"></div>
+
+            <h3>
+              Finding donations
+            </h3>
+
+            <p>
+              Looking for food donations available
+              for your organization.
+            </p>
+
+          </div>
+
+
+          <!-- EMPTY -->
+          <div
+            class="state-card"
+            *ngIf="
+              !loading &&
+              donations.length === 0
+            "
+          >
+
+            <div class="state-icon">
+              🌱
+            </div>
+
+            <h3>
+              No donations available
+            </h3>
+
+            <p>
+              New food donations will appear here
+              when donors create them.
+            </p>
+
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="loadDonations()"
+            >
+              Check Again
+            </button>
+
+          </div>
+
+
+          <!-- DONATION LIST -->
+          <div
+            class="donation-list"
+            *ngIf="
+              !loading &&
+              donations.length > 0
+            "
+          >
+
+            <article
+              class="donation-card"
+              *ngFor="
+                let donation of donations.slice(0, 4)
+              "
+            >
+
+              <!-- DONATION HEADER -->
+              <div class="donation-header">
+
+                <div class="food-title">
+
+                  <div class="food-avatar">
+                    🍲
+                  </div>
+
+                  <div>
+
+                    <h3>
+                      {{ donation.foodName }}
+                    </h3>
+
+                    <span>
+                      {{ donation.foodType }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <span
+                  class="availability-badge"
+                  [class.urgent-badge]="
+                    isUrgent(donation)
+                  "
+                >
+
+                  {{
+                    isUrgent(donation)
+                      ? 'Urgent'
+                      : 'Available'
+                  }}
+
+                </span>
+
+              </div>
+
+
+              <!-- FOOD META -->
+              <div class="food-meta">
+
+                <div>
+
+                  <span>
+                    Quantity
+                  </span>
+
+                  <strong>
+                    {{ donation.quantity }}
+                    {{ donation.quantityUnit }}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Servings
+                  </span>
+
+                  <strong>
+                    {{ donation.servings }} people
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Preference
+                  </span>
+
+                  <strong>
+                    {{ donation.foodPreference || '-' }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <!-- DEADLINE -->
+              <div class="deadline-row">
+
+                <div class="deadline-info">
+
+                  <span class="small-icon">
+                    ⏰
+                  </span>
+
+                  <div>
+
+                    <span>
+                      Pickup deadline
+                    </span>
+
+                    <strong>
+                      {{
+                        formatDateTime(
+                          donation.pickupDeadline
+                        )
+                      }}
+                    </strong>
+
+                  </div>
+
+                </div>
+
+
+                <span
+                  class="time-left"
+                  [class.urgent-time]="
+                    isUrgent(donation)
+                  "
+                >
+                  {{ getTimeRemaining(donation) }}
+                </span>
+
+              </div>
+
+
+              <!-- DONOR PICKUP LOCATION -->
+              <div class="location-row donor-location-section">
+
+                <span class="small-icon">
+                  ⌖
+                </span>
+
+                <div>
+
+                  <span>
+                    Donor pickup location
+                  </span>
+
+                  <p>
+                    {{
+                      donation.pickupAddress ||
+                      'Location not provided'
+                    }}
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <!-- DONOR MAP -->
+              <div
+                class="donor-map"
+                *ngIf="getDonorMapUrl(donation)"
+              >
+
+                <div class="donor-map-header">
+
+                  <div>
+
+                    <span class="map-small-icon">
+                      🌍
+                    </span>
+
+                    <div>
+
+                      <label>
+                        Donor area location
+                      </label>
+
+                      <span>
+                        Pickup location on map
+                      </span>
+
+                    </div>
+
+                  </div>
+
+
+                  <a
+                    class="map-open-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    [href]="
+                      'https://www.google.com/maps?q=' +
+                      donation.latitude +
+                      ',' +
+                      donation.longitude
+                    "
+                  >
+                    Open Map ↗
+                  </a>
+
+                </div>
+
+
+                <iframe
+                  class="donor-map-frame"
+                  [src]="getDonorMapUrl(donation)"
+                  loading="lazy"
+                  allowfullscreen
+                  referrerpolicy="no-referrer-when-downgrade"
+                >
+                </iframe>
+
+              </div>
+
+
+              <!-- MAP NOT AVAILABLE -->
+              <div
+                class="no-map-location"
+                *ngIf="!getDonorMapUrl(donation)"
+              >
+
+                <span>
+                  ⌖
+                </span>
+
+                <div>
+
+                  <strong>
+                    Map location unavailable
+                  </strong>
+
+                  <p>
+                    Donor location coordinates are not available.
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <!-- DONOR -->
+              <div
+                class="donor-row"
+                *ngIf="donation.donorId"
+              >
+
+                <div class="donor-avatar">
+
+                  {{
+                    getDonorName(donation)
+                      .charAt(0)
+                      .toUpperCase()
+                  }}
+
+                </div>
+
+                <div>
+
+                  <span>
+                    Donated by
+                  </span>
+
+                  <strong>
+                    {{ getDonorName(donation) }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <!-- ACCEPT -->
+              <button
+                type="button"
+                class="accept-button"
+                [disabled]="
+                  acceptingId === donation._id
+                "
+                (click)="
+                  acceptDonation(donation._id)
+                "
+              >
+
+                {{
+                  acceptingId === donation._id
+                    ? 'Accepting...'
+                    : '✓ Accept Donation'
+                }}
+
+              </button>
+
+            </article>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <aside class="side-column">
+
+
+          <!-- ACTIVITY -->
+          <div class="side-panel">
+
+            <div class="side-panel-header">
+
+              <div>
+
+                <span class="section-eyebrow">
+                  COLLECTIONS
+                </span>
+
+                <h3>
+                  Your Activity
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <!-- ACTIVE -->
+            <div class="activity-stat">
+
+              <div class="activity-icon green">
+                ✓
+              </div>
+
+              <div>
+
+                <strong>
+                  {{ activeCollections }}
+                </strong>
+
+                <span>
+                  Active collections
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- COMPLETED -->
+            <div class="activity-stat">
+
+              <div class="activity-icon purple">
+                ✓
+              </div>
+
+              <div>
+
+                <strong>
+                  {{ completedCollections }}
+                </strong>
+
+                <span>
+                  Completed donations
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- MANAGE -->
+            <button
+              type="button"
+              class="panel-button"
+              (click)="showSection('accepted')"
+            >
+
+              Manage Collections
+
+              <span>
+                →
+              </span>
+
+            </button>
+
+          </div>
+
+
+          <!-- IMPACT -->
+          <div class="impact-panel">
+
+            <div class="impact-decoration">
+              🌱
+            </div>
+
+            <span>
+              YOUR IMPACT
+            </span>
+
+            <h3>
+              Every meal matters.
+            </h3>
+
+            <p>
+              By collecting surplus food,
+              your organization helps reduce
+              waste and support people in need.
+            </p>
+
+          </div>
+
+        </aside>
+
+      </section>
+
+    </ng-container>
+
+
+
+    <!-- ===================================================
+         AVAILABLE DONATIONS
+    ==================================================== -->
+
+    <ng-container
+      *ngIf="activeSection === 'available'"
+    >
+
+      <div class="page-section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            FOOD OPPORTUNITIES
+          </span>
+
+          <h2>
+            Available Donations
+          </h2>
+
+          <p>
+            Browse food donations that are ready
+            for your organization to collect.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="loadDonations()"
+        >
+          ↻ Refresh
+        </button>
+
+      </div>
+
+
+      <!-- LOADING -->
+      <div
+        class="state-card"
+        *ngIf="loading"
+      >
+
+        <div class="spinner"></div>
+
+        <h3>
+          Loading donations
+        </h3>
+
+        <p>
+          Please wait while we find available donations.
+        </p>
+
+      </div>
+
+
+      <!-- EMPTY -->
+      <div
+        class="state-card"
+        *ngIf="
+          !loading &&
+          donations.length === 0
+        "
+      >
+
+        <div class="state-icon">
+          🌱
+        </div>
+
+        <h3>
+          No donations available
+        </h3>
+
+        <p>
+          There are currently no food donations
+          available for collection.
+        </p>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="loadDonations()"
+        >
+          Check Again
+        </button>
+
+      </div>
+
+
+      <!-- DONATION GRID -->
+      <div
+        class="full-donation-grid"
+        *ngIf="
+          !loading &&
+          donations.length > 0
+        "
+      >
+
+        <article
+          class="large-donation-card"
+          *ngFor="let donation of donations"
+        >
+
+          <!-- HEADER -->
+          <div class="donation-header">
+
+            <div class="food-title">
+
+              <div class="food-avatar large">
+                🍲
+              </div>
+
+              <div>
+
+                <h3>
+                  {{ donation.foodName }}
+                </h3>
+
+                <span>
+                  {{ donation.foodType }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <span
+              class="availability-badge"
+              [class.urgent-badge]="
+                isUrgent(donation)
+              "
+            >
+
+              {{
+                isUrgent(donation)
+                  ? 'Urgent'
+                  : 'Available'
+              }}
+
+            </span>
+
+          </div>
+
+
+          <!-- FOOD PREFERENCE -->
+          <div
+            class="preference-pill"
+            *ngIf="donation.foodPreference"
+          >
+
+            {{ donation.foodPreference }}
+
+          </div>
+
+
+          <!-- DETAILS -->
+          <div class="large-details">
+
+            <div>
+
+              <span>
+                Quantity
+              </span>
+
+              <strong>
+                {{ donation.quantity }}
+                {{ donation.quantityUnit }}
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                People served
+              </span>
+
+              <strong>
+                {{ donation.servings || 0 }}
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Deadline
+              </span>
+
+              <strong>
+                {{
+                  formatDateTime(
+                    donation.pickupDeadline
+                  )
+                }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- DONOR PICKUP LOCATION -->
+          <div class="location-box donor-location-section">
+
+            <span class="location-icon">
+              ⌖
+            </span>
+
+            <div class="location-content">
+
+              <label>
+                Donor pickup location
+              </label>
+
+              <p>
+                {{
+                  donation.pickupAddress ||
+                  'Location not provided'
+                }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- DONOR AREA MAP -->
+          <div
+            class="donor-map"
+            *ngIf="getDonorMapUrl(donation)"
+          >
+
+            <div class="donor-map-header">
+
+              <div>
+
+                <span class="map-small-icon">
+                  🌍
+                </span>
+
+                <div>
+
+                  <label>
+                    Donor area location
+                  </label>
+
+                  <span>
+                    Pickup location on map
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <a
+                class="map-open-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                [href]="
+                  'https://www.google.com/maps?q=' +
+                  donation.latitude +
+                  ',' +
+                  donation.longitude
+                "
+              >
+                Open Map ↗
+              </a>
+
+            </div>
+
+
+            <iframe
+              class="donor-map-frame"
+              [src]="getDonorMapUrl(donation)"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+            >
+            </iframe>
+
+          </div>
+
+
+          <!-- MAP NOT AVAILABLE -->
+          <div
+            class="no-map-location"
+            *ngIf="!getDonorMapUrl(donation)"
+          >
+
+            <span>
+              ⌖
+            </span>
+
+            <div>
+
+              <strong>
+                Map location unavailable
+              </strong>
+
+              <p>
+                Donor location coordinates are not available.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- DESCRIPTION -->
+          <div
+            class="description-box"
+            *ngIf="donation.description"
+          >
+
+            <label>
+              Description
+            </label>
+
+            <p>
+              {{ donation.description }}
+            </p>
+
+          </div>
+
+
+          <!-- DONOR -->
+          <div
+            class="donor-box"
+            *ngIf="donation.donorId"
+          >
+
+            <div class="donor-avatar">
+
+              {{
+                getDonorName(donation)
+                  .charAt(0)
+                  .toUpperCase()
+              }}
+
+            </div>
+
+            <div>
+
+              <span>
+                Donor
+              </span>
+
+              <strong>
+                {{ getDonorName(donation) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACCEPT -->
+          <button
+            type="button"
+            class="accept-button"
+            [disabled]="
+              acceptingId === donation._id
+            "
+            (click)="
+              acceptDonation(donation._id)
+            "
+          >
+
+            {{
+              acceptingId === donation._id
+                ? 'Accepting...'
+                : '✓ Accept Donation'
+            }}
+
+          </button>
+
+        </article>
+
+      </div>
+
+    </ng-container>
+
+
+
+    <!-- ===================================================
+         MY COLLECTIONS
+    ==================================================== -->
+
+    <ng-container
+      *ngIf="activeSection === 'accepted'"
+    >
+
+      <div class="page-section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            COLLECTION MANAGEMENT
+          </span>
+
+          <h2>
+            My Collections
+          </h2>
+
+          <p>
+            Follow the progress of donations accepted
+            by your organization.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="loadAcceptedDonations()"
+        >
+          ↻ Refresh
+        </button>
+
+      </div>
+
+
+      <!-- LOADING -->
+      <div
+        class="state-card"
+        *ngIf="loadingAccepted"
+      >
+
+        <div class="spinner"></div>
+
+        <h3>
+          Loading your collections
+        </h3>
+
+      </div>
+
+
+      <!-- EMPTY -->
+      <div
+        class="state-card"
+        *ngIf="
+          !loadingAccepted &&
+          acceptedDonations.length === 0
+        "
+      >
+
+        <div class="state-icon">
+          ✓
+        </div>
+
+        <h3>
+          No collections yet
+        </h3>
+
+        <p>
+          Donations accepted by your organization
+          will appear here.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="showSection('available')"
+        >
+          Find Donations
+        </button>
+
+      </div>
+
+
+      <!-- COLLECTION LIST -->
+      <div
+        class="collection-list"
+        *ngIf="
+          !loadingAccepted &&
+          acceptedDonations.length > 0
+        "
+      >
+
+        <article
+          class="collection-card"
+          *ngFor="
+            let donation of acceptedDonations
+          "
+        >
+
+          <!-- COLLECTION HEADER -->
+          <div class="collection-header">
+
+            <div class="food-title">
+
+              <div class="food-avatar">
+                🍱
+              </div>
+
+              <div>
+
+                <h3>
+                  {{ donation.foodName }}
+                </h3>
+
+                <span>
+                  {{ donation.foodType }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <span
+              class="status-badge"
+              [ngClass]="
+                getStatusClass(donation)
+              "
+            >
+              {{ getStatusText(donation) }}
+            </span>
+
+          </div>
+
+
+          <!-- =================================================
+               PROGRESS
+          ================================================== -->
+
+          <div class="progress-container">
+
+            <!-- ACCEPTED -->
+            <div class="progress-step active">
+
+              <div class="progress-dot">
+                ✓
+              </div>
+
+              <span>
+                Accepted
+              </span>
+
+            </div>
+
+
+            <!-- LINE -->
+            <div
+              class="progress-line"
+              [class.active]="
+                donation.status === 'picked_up' ||
+                donation.status === 'completed'
+              "
+            ></div>
+
+
+            <!-- PICKED UP -->
+            <div
+              class="progress-step"
+              [class.active]="
+                donation.status === 'picked_up' ||
+                donation.status === 'completed'
+              "
+            >
+
+              <div class="progress-dot">
+
+                {{
+                  donation.status === 'picked_up' ||
+                  donation.status === 'completed'
+                    ? '✓'
+                    : '2'
+                }}
+
+              </div>
+
+              <span>
+                Picked Up
+              </span>
+
+            </div>
+
+
+            <!-- LINE -->
+            <div
+              class="progress-line"
+              [class.active]="
+                donation.status === 'completed'
+              "
+            ></div>
+
+
+            <!-- COMPLETED -->
+            <div
+              class="progress-step"
+              [class.active]="
+                donation.status === 'completed'
+              "
+            >
+
+              <div class="progress-dot">
+
+                {{
+                  donation.status === 'completed'
+                    ? '✓'
+                    : '3'
+                }}
+
+              </div>
+
+              <span>
+                Completed
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- COLLECTION DETAILS -->
+          <div class="collection-details">
+
+            <div>
+
+              <span>
+                Quantity
+              </span>
+
+              <strong>
+                {{ donation.quantity }}
+                {{ donation.quantityUnit }}
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Servings
+              </span>
+
+              <strong>
+                {{ donation.servings || 0 }} people
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Pickup deadline
+              </span>
+
+              <strong>
+                {{
+                  formatDateTime(
+                    donation.pickupDeadline
+                  )
+                }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               DONOR LOCATION
+          ================================================== -->
+
+          <div class="location-box donor-location-section">
+
+            <span class="location-icon">
+              ⌖
+            </span>
+
+            <div class="location-content">
+
+              <label>
+                Donor pickup location
+              </label>
+
+              <p>
+                {{
+                  donation.pickupAddress ||
+                  'Location not provided'
+                }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               DONOR AREA MAP
+          ================================================== -->
+
+          <div
+            class="donor-map"
+            *ngIf="getDonorMapUrl(donation)"
+          >
+
+            <div class="donor-map-header">
+
+              <div>
+
+                <span class="map-small-icon">
+                  🌍
+                </span>
+
+                <div>
+
+                  <label>
+                    Donor area location
+                  </label>
+
+                  <span>
+                    Pickup location on map
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <a
+                class="map-open-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                [href]="
+                  'https://www.google.com/maps?q=' +
+                  donation.latitude +
+                  ',' +
+                  donation.longitude
+                "
+              >
+                Open Map ↗
+              </a>
+
+            </div>
+
+
+            <iframe
+              class="donor-map-frame"
+              [src]="getDonorMapUrl(donation)"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+            >
+            </iframe>
+
+          </div>
+
+
+          <!-- MAP NOT AVAILABLE -->
+          <div
+            class="no-map-location"
+            *ngIf="!getDonorMapUrl(donation)"
+          >
+
+            <span>
+              ⌖
+            </span>
+
+            <div>
+
+              <strong>
+                Map location unavailable
+              </strong>
+
+              <p>
+                Donor location coordinates are not available.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACCEPTED DATE -->
+          <div
+            class="accepted-info"
+            *ngIf="donation.acceptedAt"
+          >
+
+            Accepted on
+            {{ formatDateTime(donation.acceptedAt) }}
+
+          </div>
+
+
+          <!-- =================================================
+               PICKUP ACTION
+          ================================================== -->
+
+          <div
+            class="collection-action"
+            *ngIf="
+              donation.status === 'accepted'
+            "
+          >
+
+            <div>
+
+              <strong>
+                Ready for pickup
+              </strong>
+
+              <p>
+                Collect the food from the donor
+                before the pickup deadline.
+              </p>
+
+            </div>
+
+
+            <div class="collection-actions-row">
+
+              <button
+                type="button"
+                class="pickup-button"
+                [disabled]="
+                  actionLoadingId === donation._id
+                "
+                (click)="
+                  markDonationPickedUp(donation)
+                "
+              >
+
+                {{
+                  actionLoadingId === donation._id
+                    ? 'Updating...'
+                    : '📦 Confirm Pickup'
+                }}
+
+              </button>
+
+              <button
+                type="button"
+                class="secondary-button danger-button"
+                [disabled]="
+                  actionLoadingId === donation._id ||
+                  !
+                  canCancelAcceptedDonation(donation)
+                "
+                (click)="
+                  cancelAcceptedDonation(donation)
+                "
+                *ngIf="
+                  canCancelAcceptedDonation(donation)
+                "
+              >
+
+                {{
+                  actionLoadingId === donation._id
+                    ? 'Cancelling...'
+                    : '↩ Cancel Acceptance'
+                }}
+
+              </button>
+
+              <span
+                class="cancel-countdown"
+                *ngIf="canCancelAcceptedDonation(donation)"
+              >
+                {{ getCancellationCountdown(donation) }} left to cancel
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               COMPLETE ACTION
+          ================================================== -->
+
+          <div
+            class="collection-action complete"
+            *ngIf="
+              donation.status === 'picked_up'
+            "
+          >
+
+            <div>
+
+              <strong>
+                Food has been collected
+              </strong>
+
+              <p>
+                Mark the donation completed after
+                delivering the food to beneficiaries.
+              </p>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="complete-button"
+              [disabled]="
+                actionLoadingId === donation._id
+              "
+              (click)="
+                markDonationCompleted(donation)
+              "
+            >
+
+              {{
+                actionLoadingId === donation._id
+                  ? 'Completing...'
+                  : '✓ Mark Completed'
+              }}
+
+            </button>
+
+          </div>
+
+
+          <!-- =================================================
+               COMPLETED
+          ================================================== -->
+
+          <div
+            class="completed-banner"
+            *ngIf="
+              donation.status === 'completed'
+            "
+          >
+
+            <div class="completed-check">
+              ✓
+            </div>
+
+            <div>
+
+              <strong>
+                Donation successfully completed
+              </strong>
+
+              <p>
+                This food donation has been delivered
+                successfully.
+              </p>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </ng-container>
+
+
+
+    <!-- ===================================================
+         NOTIFICATIONS
+    ==================================================== -->
+
+    <ng-container
+      *ngIf="activeSection === 'notifications'"
+    >
+
+      <div class="page-section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            UPDATES
+          </span>
+
+          <h2>
+            Notifications
+          </h2>
+
+          <p>
+            Stay informed about activity on MealMitra.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="notification-list">
+
+
+        <!-- DONATIONS -->
+        <div class="notification-card">
+
+          <div class="notification-icon green">
+            ▣
+          </div>
+
+          <div>
+
+            <span>
+              Donations
+            </span>
+
+            <strong>
+              New food donations are available
+            </strong>
+
+            <p>
+              Newly created donations will appear
+              in your Available Donations section.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- COLLECTIONS -->
+        <div class="notification-card">
+
+          <div class="notification-icon blue">
+            ✓
+          </div>
+
+          <div>
+
+            <span>
+              Collections
+            </span>
+
+            <strong>
+              Track your accepted donations
+            </strong>
+
+            <p>
+              Monitor pickup and completion progress
+              from My Collections.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- DEADLINES -->
+        <div class="notification-card">
+
+          <div class="notification-icon orange">
+            ⏰
+          </div>
+
+          <div>
+
+            <span>
+              Pickup reminders
+            </span>
+
+            <strong>
+              Keep an eye on pickup deadlines
+            </strong>
+
+            <p>
+              Urgent donations are highlighted when
+              their pickup deadline is approaching.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+
+
+    <!-- ===================================================
+         ORGANIZATION PROFILE
+    ==================================================== -->
+
+    <ng-container
+      *ngIf="activeSection === 'profile'"
+    >
+
+
+      <!-- PAGE HEADER -->
+      <div class="page-section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            ORGANIZATION
+          </span>
+
+          <h2>
+            Organization Profile
+          </h2>
+
+          <p>
+            Complete information associated with your
+            NGO account on MealMitra.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           PROFILE CARD
+      ================================================== -->
+
+      <section class="profile-card">
+
+
+        <!-- COVER -->
+        <div class="profile-cover">
+
+          <div class="profile-cover-content">
+
+            <span>
+              MEALMITRA NGO NETWORK
+            </span>
+
+            <strong>
+              Serving the community, one meal at a time.
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- PROFILE HEADER -->
+        <div class="profile-main">
+
+
+          <!-- AVATAR -->
+          <div class="profile-avatar-large">
+
+            {{ ngoName.charAt(0).toUpperCase() }}
+
+          </div>
+
+
+          <!-- TITLE -->
+          <div class="profile-title">
+
+            <h2>
+              {{ ngoName }}
+            </h2>
+
+            <span>
+              Verified MealMitra NGO account
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ORGANIZATION INFORMATION
+        ================================================== -->
+
+        <div class="profile-section">
+
+          <div class="profile-section-heading">
+
+            <span>
+              ORGANIZATION DETAILS
+            </span>
+
+            <h3>
+              Basic Information
+            </h3>
+
+          </div>
+
+
+          <div class="profile-grid">
+
+
+            <!-- ORGANIZATION NAME -->
+            <div class="profile-field">
+
+              <label>
+                Organization name
+              </label>
+
+              <strong>
+                {{ ngoName || '-' }}
+              </strong>
+
+            </div>
+
+
+            <!-- EMAIL -->
+            <div class="profile-field">
+
+              <label>
+                Email address
+              </label>
+
+              <strong>
+                {{ ngoEmail || '-' }}
+              </strong>
+
+            </div>
+
+
+            <!-- PHONE -->
+            <div class="profile-field">
+
+              <label>
+                Phone number
+              </label>
+
+              <strong>
+                {{ ngoPhone || '-' }}
+              </strong>
+
+            </div>
+
+
+            <!-- PEOPLE -->
+            <div class="profile-field">
+
+              <label>
+                People in organization
+              </label>
+
+              <strong>
+                {{ numberOfPeople || 0 }}
+              </strong>
+
+            </div>
+
+
+            <!-- ADDRESS -->
+            <div class="profile-field full">
+
+              <label>
+                Registered address
+              </label>
+
+              <strong>
+                {{ ngoAddress || 'Address not provided' }}
+              </strong>
+
+            </div>
+
+
+            <!-- ABOUT -->
+            <div class="profile-field full">
+
+              <label>
+                About organization
+              </label>
+
+              <p>
+
+                {{
+                  ngoAbout ||
+                  'No organization description available.'
+                }}
+
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-section-heading">
+            <span>DONATION MATCHING</span>
+            <h3>Food your organization can accept</h3>
+            <p>These preferences are used to rank suitable donations for your organization.</p>
+          </div>
+
+          <div class="food-support-profile">
+            <strong>Food types</strong>
+            <div class="food-support-options">
+              @for (foodType of foodTypeOptions; track foodType) {
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="supportedFoodTypes.includes(foodType)"
+                    [disabled]="savingFoodSupport"
+                    (change)="toggleSupportedFoodType(foodType, $event)"
+                  />
+                  {{ foodType }}
+                </label>
+              }
+            </div>
+
+            <strong>Dietary preferences</strong>
+            <div class="food-support-options">
+              @for (preference of foodPreferenceOptions; track preference) {
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="supportedFoodPreferences.includes(preference)"
+                    [disabled]="savingFoodSupport"
+                    (change)="toggleSupportedFoodPreference(preference, $event)"
+                  />
+                  {{ preference }}
+                </label>
+              }
+            </div>
+
+            <button
+              type="button"
+              class="save-food-support"
+              [disabled]="savingFoodSupport"
+              (click)="saveFoodSupport()"
+            >
+              {{ savingFoodSupport ? 'Saving...' : 'Save preferences' }}
+            </button>
+
+            <p class="food-support-message" *ngIf="foodSupportMessage" role="status">
+              {{ foodSupportMessage }}
+            </p>
+            <p class="food-support-error" *ngIf="foodSupportError" role="alert">
+              {{ foodSupportError }}
+            </p>
+          </div>
+        </div>
+
+
+        <!-- =================================================
+             LOCATION INFORMATION
+        ================================================== -->
+
+        <div class="profile-section location-section">
+
+          <div class="profile-section-heading">
+
+            <span>
+              LOCATION
+            </span>
+
+            <h3>
+              Organization Location
+            </h3>
+
+            <p>
+              Your registered location helps MealMitra
+              connect your organization with nearby
+              food donations.
+            </p>
+
+          </div>
+
+
+          <div class="location-profile-grid">
+
+
+            <!-- LOCATION ADDRESS -->
+            <div class="profile-location-card">
+
+              <div class="profile-location-icon">
+                ⌖
+              </div>
+
+              <div>
+
+                <label>
+                  Registered location
+                </label>
+
+                <strong>
+                  {{ ngoAddress || 'Location not provided' }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- LATITUDE -->
+            <div class="profile-location-card">
+
+              <div class="profile-location-icon">
+                ↕
+              </div>
+
+              <div>
+
+                <label>
+                  Latitude
+                </label>
+
+                <strong>
+
+                  {{
+                    user?.latitude !== undefined &&
+                    user?.latitude !== null &&
+                    user?.latitude !== ''
+                      ? user.latitude
+                      : 'Not provided'
+                  }}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- LONGITUDE -->
+            <div class="profile-location-card">
+
+              <div class="profile-location-icon">
+                ↔
+              </div>
+
+              <div>
+
+                <label>
+                  Longitude
+                </label>
+
+                <strong>
+
+                  {{
+                    user?.longitude !== undefined &&
+                    user?.longitude !== null &&
+                    user?.longitude !== ''
+                      ? user.longitude
+                      : 'Not provided'
+                  }}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- MAP -->
+            <div class="profile-location-card map-card">
+
+              <div class="profile-location-icon">
+                🌍
+              </div>
+
+              <div>
+
+                <label>
+                  Map location
+                </label>
+
+                <a
+                  *ngIf="
+                    user?.latitude !== undefined &&
+                    user?.longitude !== undefined &&
+                    user?.latitude !== null &&
+                    user?.longitude !== null &&
+                    user?.latitude !== '' &&
+                    user?.longitude !== ''
+                  "
+                  class="map-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  [href]="
+                    'https://www.google.com/maps?q=' +
+                    user.latitude +
+                    ',' +
+                    user.longitude
+                  "
+                >
+                  View on Google Maps →
+                </a>
+
+                <strong
+                  *ngIf="
+                    user?.latitude === undefined ||
+                    user?.longitude === undefined ||
+                    user?.latitude === null ||
+                    user?.longitude === null ||
+                    user?.latitude === '' ||
+                    user?.longitude === ''
+                  "
+                >
+                  Location coordinates not available
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACCOUNT INFORMATION
+        ================================================== -->
+
+        <div class="profile-section account-section">
+
+          <div class="profile-section-heading">
+
+            <span>
+              ACCOUNT
+            </span>
+
+            <h3>
+              MealMitra Account
+            </h3>
+
+          </div>
+
+
+          <div class="account-info-grid">
+
+
+            <!-- ROLE -->
+            <div class="account-info-item">
+
+              <span>
+                Account type
+              </span>
+
+              <strong>
+                NGO
+              </strong>
+
+            </div>
+
+
+            <!-- STATUS -->
+            <div class="account-info-item">
+
+              <span>
+                Account status
+              </span>
+
+              <strong class="verified-status">
+                ✓ Active
+              </strong>
+
+            </div>
+
+
+            <!-- PEOPLE -->
+            <div class="account-info-item">
+
+              <span>
+                Organization capacity
+              </span>
+
+              <strong>
+                {{ numberOfPeople || 0 }} people
+              </strong>
+
+            </div>
+
+
+            <!-- ACTIVE COLLECTIONS -->
+            <div class="account-info-item">
+
+              <span>
+                Active collections
+              </span>
+
+              <strong>
+                {{ activeCollections }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PROFILE FOOTER
+        ================================================== -->
+
+        <div class="profile-footer">
+
+          <div>
+
+            <strong>
+              Your organization profile
+            </strong>
+
+            <p>
+              Keep your registered organization and
+              location information accurate so donors
+              can connect with your NGO efficiently.
+            </p>
+
+          </div>
+
+          <div class="profile-footer-badge">
+            ✓ MealMitra NGO
+          </div>
+
+        </div>
+
+      </section>
+
+    </ng-container>
+
+  </main>
+
+</div>

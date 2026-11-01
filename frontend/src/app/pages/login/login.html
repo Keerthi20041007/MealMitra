@@ -1,0 +1,470 @@
+<div class="login-page">
+
+  <!-- =================================================
+       LEFT BRAND PANEL
+  ================================================== -->
+
+  <section class="brand-panel">
+
+    <div class="brand-content">
+
+      <!-- LOGO -->
+
+      <a
+        routerLink="/"
+        class="brand-logo"
+      >
+
+        <div class="logo-box">
+          🍃
+        </div>
+
+        <div>
+
+          <div class="brand-name">
+            MealMitra
+          </div>
+
+          <div class="brand-tagline">
+            Share • Care • Reduce Waste
+          </div>
+
+        </div>
+
+      </a>
+
+
+      <!-- MAIN MESSAGE -->
+
+      <div class="brand-message">
+
+        <div class="quote-icon">
+          "
+        </div>
+
+        <h1>
+          Good food
+          <span>should never go to waste.</span>
+        </h1>
+
+        <p>
+          Join MealMitra and help connect surplus food
+          with people and communities who need it.
+        </p>
+
+      </div>
+
+
+      <!-- BENEFITS -->
+
+      <div class="benefits">
+
+        <div class="benefit">
+
+          <div class="benefit-icon">
+            📦
+          </div>
+
+          <div>
+
+            <h3>
+              Donate Surplus Food
+            </h3>
+
+            <p>
+              Make every extra meal count.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="benefit">
+
+          <div class="benefit-icon">
+            🤝
+          </div>
+
+          <div>
+
+            <h3>
+              Connect with NGOs
+            </h3>
+
+            <p>
+              Reach organizations near you.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="benefit">
+
+          <div class="benefit-icon">
+            🌱
+          </div>
+
+          <div>
+
+            <h3>
+              Reduce Food Waste
+            </h3>
+
+            <p>
+              Create a positive impact.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =================================================
+       RIGHT LOGIN PANEL
+  ================================================== -->
+
+  <section class="login-panel">
+
+    <div class="login-container">
+
+      <!-- MOBILE LOGO -->
+
+      <div class="mobile-logo">
+
+        <div class="mobile-logo-icon">
+          🍃
+        </div>
+
+        <span>
+          MealMitra
+        </span>
+
+      </div>
+
+
+      <!-- LOGIN HEADER -->
+
+      <div class="login-header">
+
+        <span class="welcome-label">
+          WELCOME BACK
+        </span>
+
+        <h2>
+          Sign in to your account
+        </h2>
+
+        <p>
+          Continue making a difference with MealMitra.
+        </p>
+
+      </div>
+
+
+      <!-- =================================================
+           GENERAL ERROR MESSAGE
+      ================================================== -->
+
+      @if (errorMessage) {
+
+        <div
+          class="error-message"
+          role="alert"
+        >
+
+          <span class="error-icon">
+            !
+          </span>
+
+          <span>
+            {{ errorMessage }}
+          </span>
+
+        </div>
+
+      }
+
+
+      <!-- =================================================
+           LOGIN FORM
+      ================================================== -->
+
+      <form
+        class="login-form"
+        (ngSubmit)="login()"
+        novalidate
+      >
+
+        <!-- =================================================
+             EMAIL
+        ================================================== -->
+
+        <div
+          class="form-group"
+          [class.has-error]="emailError"
+        >
+
+          <label for="email">
+            Email Address
+          </label>
+
+
+          <div
+            class="input-wrapper"
+            [class.input-error]="emailError"
+          >
+
+            <span class="input-icon">
+              ✉
+            </span>
+
+
+            <input
+              id="email"
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              (input)="onEmailInput()"
+              (blur)="onEmailBlur()"
+              placeholder="Enter your email"
+              autocomplete="email"
+              maxlength="254"
+              [disabled]="loading"
+              [class.invalid-input]="emailError"
+              aria-describedby="email-error"
+            />
+
+          </div>
+
+
+          @if (emailError) {
+
+            <div
+              id="email-error"
+              class="field-error"
+              role="alert"
+            >
+
+              <span>
+                !
+              </span>
+
+              <span>
+                {{ emailError }}
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             PASSWORD
+        ================================================== -->
+
+        <div
+          class="form-group"
+          [class.has-error]="passwordError"
+        >
+
+          <div class="password-label">
+
+            <label for="password">
+              Password
+            </label>
+
+
+            <a
+              href="#"
+              class="forgot-link"
+              (click)="$event.preventDefault()"
+            >
+              Forgot password?
+            </a>
+
+          </div>
+
+
+          <div
+            class="input-wrapper"
+            [class.input-error]="passwordError"
+          >
+
+            <span class="input-icon">
+              🔒
+            </span>
+
+
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              name="password"
+              [(ngModel)]="password"
+              (input)="onPasswordInput()"
+              (blur)="onPasswordBlur()"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              [disabled]="loading"
+              [class.invalid-input]="passwordError"
+              aria-describedby="password-error"
+            />
+
+
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePassword()"
+              [disabled]="loading"
+              aria-label="Show or hide password"
+            >
+
+              {{
+                showPassword
+                  ? '◉'
+                  : '◌'
+              }}
+
+            </button>
+
+          </div>
+
+
+          @if (passwordError) {
+
+            <div
+              id="password-error"
+              class="field-error"
+              role="alert"
+            >
+
+              <span>
+                !
+              </span>
+
+              <span>
+                {{ passwordError }}
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             REMEMBER ME
+        ================================================== -->
+
+        <div class="remember-row">
+
+          <label class="remember-label">
+
+            <input
+              type="checkbox"
+              name="remember"
+            />
+
+            <span>
+              Remember me
+            </span>
+
+          </label>
+
+        </div>
+
+
+        <!-- =================================================
+             LOGIN BUTTON
+        ================================================== -->
+
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="loading"
+        >
+
+          @if (!loading) {
+
+            <span>
+              Sign In
+            </span>
+
+            <span class="button-arrow">
+              →
+            </span>
+
+          }
+
+          @if (loading) {
+
+            <span class="spinner"></span>
+
+            <span>
+              Signing in...
+            </span>
+
+          }
+
+        </button>
+
+      </form>
+
+
+      <!-- =================================================
+           REGISTER
+      ================================================== -->
+
+      <div class="register-section">
+
+        <span>
+          Don't have an account?
+        </span>
+
+        <a routerLink="/register">
+          Create an account
+        </a>
+
+      </div>
+
+
+      <!-- =================================================
+           DIVIDER
+      ================================================== -->
+
+      <div class="divider"></div>
+
+
+      <!-- =================================================
+           BACK HOME
+      ================================================== -->
+
+      <a
+        routerLink="/"
+        class="back-home"
+      >
+
+        <span>
+          ←
+        </span>
+
+        Back to Home
+
+      </a>
+
+    </div>
+
+  </section>
+
+</div>

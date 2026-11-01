@@ -1,0 +1,399 @@
+<div class="profile-page">
+
+  <!-- ==================================================
+       SIDEBAR
+  ================================================== -->
+
+  <aside class="sidebar">
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        🍲
+      </div>
+
+      <div>
+
+        <h2>
+          MealMitra
+        </h2>
+
+        <span>
+          Share • Care • Reduce Waste
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="navigation">
+
+      <!-- DASHBOARD -->
+
+      <a
+        class="nav-item"
+        routerLink="/donor-dashboard">
+
+        <span class="nav-icon">
+          ⌂
+        </span>
+
+        <span>
+          Dashboard
+        </span>
+
+      </a>
+
+
+      <!-- CREATE DONATION -->
+
+      <a
+        class="nav-item"
+        routerLink="/create-donation">
+
+        <span class="nav-icon">
+          ＋
+        </span>
+
+        <span>
+          Create Donation
+        </span>
+
+      </a>
+
+
+      <!-- MY DONATIONS -->
+
+      <a
+        class="nav-item"
+        routerLink="/my-donations">
+
+        <span class="nav-icon">
+          ▣
+        </span>
+
+        <span>
+          My Donations
+        </span>
+
+      </a>
+
+
+      <!-- PROFILE -->
+
+      <a
+        class="nav-item active"
+        routerLink="/donor-profile">
+
+        <span class="nav-icon">
+          ♙
+        </span>
+
+        <span>
+          Profile
+        </span>
+
+      </a>
+
+    </nav>
+
+
+    <!-- SIDEBAR BOTTOM -->
+
+    <div class="sidebar-bottom">
+
+      <div class="impact-box">
+
+        <div class="impact-icon">
+          🌱
+        </div>
+
+        <div>
+
+          <strong>
+            Keep making an impact!
+          </strong>
+
+          <p>
+            Every donation can become a meal
+            for someone in need.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- LOGOUT -->
+
+      <button
+        class="logout-button"
+        (click)="logout()">
+
+        <span>
+          ↪
+        </span>
+
+        Logout
+
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- ==================================================
+       MAIN CONTENT
+  ================================================== -->
+
+  <main class="main-content">
+
+
+    <!-- ==================================================
+         HEADER
+    ================================================== -->
+
+    <header class="top-header">
+
+      <div class="page-heading">
+
+        <span class="small-heading">
+          DONOR PORTAL
+        </span>
+
+        <h1>
+          My Profile
+        </h1>
+
+        <p>
+          View your MealMitra donor account information.
+        </p>
+
+      </div>
+
+
+      <button
+        class="back-button"
+        (click)="goToDashboard()">
+
+        ← Dashboard
+
+      </button>
+
+    </header>
+
+
+    <!-- ==================================================
+         PROFILE HERO
+    ================================================== -->
+
+    <section class="profile-card">
+
+      <div class="profile-main">
+
+        <!-- AVATAR -->
+
+        <div class="large-avatar">
+
+          {{ donorInitial }}
+
+        </div>
+
+
+        <!-- NAME -->
+
+        <div class="profile-heading">
+
+          <span class="profile-label">
+            FOOD DONOR
+          </span>
+
+          <h2>
+            {{ donorName }}
+          </h2>
+
+          <p>
+            Thank you for helping reduce food waste
+            and support the community.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         ACCOUNT INFORMATION
+    ================================================== -->
+
+    <section class="information-card">
+
+      <div class="card-title">
+
+        <div class="title-icon">
+          👤
+        </div>
+
+        <div>
+
+          <span>
+            ACCOUNT INFORMATION
+          </span>
+
+          <h2>
+            Personal Details
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="information-grid">
+
+
+        <!-- NAME -->
+
+        <div class="information-item">
+
+          <span class="field-label">
+            Full Name
+          </span>
+
+          <strong>
+            {{ donorName }}
+          </strong>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="information-item">
+
+          <span class="field-label">
+            Email Address
+          </span>
+
+          <strong>
+            {{ donorEmail }}
+          </strong>
+
+        </div>
+
+
+        <!-- PHONE -->
+
+        <div class="information-item">
+
+          <span class="field-label">
+            Phone Number
+          </span>
+
+          <strong>
+            {{ donorPhone }}
+          </strong>
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="information-item">
+
+          <span class="field-label">
+            Account Type
+          </span>
+
+          <strong>
+            {{ donorRole }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         DONOR MESSAGE
+    ================================================== -->
+
+    <section class="donor-message">
+
+      <div class="message-icon">
+        🌱
+      </div>
+
+      <div>
+
+        <h3>
+          Your contribution matters
+        </h3>
+
+        <p>
+          Every food donation helps reduce waste
+          and connects surplus food with people
+          and communities who need it.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         ACTIONS
+    ================================================== -->
+
+    <section class="actions-card">
+
+      <button
+        class="primary-button"
+        (click)="goToDashboard()">
+
+        ← Back to Dashboard
+
+      </button>
+
+
+      <button
+        class="secondary-button"
+        routerLink="/my-donations">
+
+        View My Donations
+
+      </button>
+
+    </section>
+
+
+    <!-- ==================================================
+         FOOTER
+    ================================================== -->
+
+    <footer>
+
+      <p>
+        © 2026 MealMitra • Reducing food waste,
+        feeding communities.
+      </p>
+
+      <span>
+        Made with ❤️ for a better community
+      </span>
+
+    </footer>
+
+  </main>
+
+</div>
